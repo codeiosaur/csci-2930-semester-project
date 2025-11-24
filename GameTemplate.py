@@ -1,0 +1,2 @@
+class GameTemplate:
+    pass
