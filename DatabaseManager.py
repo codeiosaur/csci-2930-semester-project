@@ -1,2 +1,7 @@
 class DatabaseManager:
-    pass
+    def AddUser():
+        pass
+    def UpdateUser():
+        pass
+    def DeleteUser():
+        pass
