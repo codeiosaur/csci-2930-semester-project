@@ -1,3 +1,4 @@
+--Do Not ReRun
 CREATE DATABASE localCopy;
 CREATE TABLE userData(
   Username varchar(255)
