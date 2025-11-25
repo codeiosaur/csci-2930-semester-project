@@ -4,6 +4,6 @@ class Window:
     def displayLeaderboard():
         pass
     def displayMain():
-        print("Main Run Successfully)
+        print("Main Run Successfully")
     def displayGame():
         pass
