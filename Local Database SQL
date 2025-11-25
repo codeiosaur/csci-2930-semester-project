@@ -6,6 +6,7 @@ CREATE TABLE userData(
 )
 CREATE TABLE gameData(
   UserID int
+  TimesPlayed varchar(255)
   Game varchar(255)
   TotalTime time(fsp)
   Highest int
