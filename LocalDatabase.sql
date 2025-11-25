@@ -3,7 +3,7 @@ CREATE DATABASE localCopy;
 
 CREATE TABLE UserData(
   Username varchar(255) NOT NULL,
-  Password varchar(255) NOT NULL, --change to hash
+  Password hash NOT NULL, --change to hash
   ID int NOT NULL PRIMARY KEY
 );
   
