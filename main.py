@@ -1,5 +1,6 @@
+import Window
 def main():
-    pass
+    Window.displayMain()
 
 if __name__ == 'main':
     main()
