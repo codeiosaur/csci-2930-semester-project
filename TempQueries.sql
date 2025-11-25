@@ -1,1 +1,1 @@
-
+--For porting between SQL and python
