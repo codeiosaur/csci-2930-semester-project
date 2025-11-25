@@ -1,3 +1,4 @@
+#Methoods to edit SQL database as callable python
 class DatabaseManager:
     emptyIDs = []
     lastID = 0
