@@ -4,7 +4,8 @@ CREATE DATABASE localCopy;
 CREATE TABLE userData(
   Username varchar(255),
   Password varchar(255), --change to hash
-  UserID int NOT NULL AUTO_INCREMENT,
+  ID int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (ID)
 );
   
 CREATE TABLE gameData(
@@ -13,4 +14,5 @@ CREATE TABLE gameData(
   Game varchar(255),
   TotalTime time(fsp),
   Highest int,
+  PRIMARY KEY (ID)
 );
