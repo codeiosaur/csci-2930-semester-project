@@ -1,1 +1,1 @@
---For porting between SQL and python
+--For porting between SQL and python from database manager
