@@ -2,9 +2,9 @@
 class DatabaseManager:
     emptyIDs = []
     lastID = 0
-    def AddUser():
+    def AddUser(self):
         pass
-    def UpdateUser():
+    def UpdateUser(self):
         pass
-    def DeleteUser():
+    def DeleteUser(self):
         pass

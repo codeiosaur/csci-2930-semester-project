@@ -1,9 +1,9 @@
 class Window:
-    def display():
+    def display(self):
         pass
-    def displayLeaderboard():
+    def displayLeaderboard(self):
         pass
-    def displayMain():
+    def displayMain(self):
         print("Main Run Successfully")
-    def displayGame():
+    def displayGame(self):
         pass
