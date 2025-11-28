@@ -1,0 +1,6 @@
+#Run to import pygame (Testing)
+python3 --version
+pip3 --version
+pip3 install pygame
+pip3 install pygame_widgets
+python3 -m pygame.examples.aliens
