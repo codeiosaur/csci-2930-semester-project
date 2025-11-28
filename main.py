@@ -1,4 +1,6 @@
-import Window
+from Menus import Window
+
+
 def main():
     Window.displayMain()
 

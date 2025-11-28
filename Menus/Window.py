@@ -1,3 +1,4 @@
+
 class Window:
     def display(self):
         pass
