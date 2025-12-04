@@ -1,4 +1,5 @@
-import Window, pygame
+from Menus import Window
+import pygame
 def main():
     window = Window.Window()
     running = window.displayMain()
