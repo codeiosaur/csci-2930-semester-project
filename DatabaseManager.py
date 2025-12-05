@@ -21,10 +21,10 @@ class DatabaseManager:
             self.emptyIDs.pop(0)
         cursor.execute(f"""INSTERT INTO UserData ({username}, {password}, {userID})""")
 
-    def UpdateUser(self, username, userID):
+    def UpdateUser(self, username, userID): #fix
         cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userID}""")
 
-    def UpdateUser(self, password, userID):
+    def UpdateUser(self, password, userID): #Fix
         cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userID}""")
 
     def DeleteUser(self, userID):
