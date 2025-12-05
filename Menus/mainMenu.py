@@ -1,4 +1,6 @@
 import pygame
+import pygame_widgets
+from pygame_widgets.button import Button
 
 pygame.init()
 
@@ -14,16 +16,30 @@ def draw_text(text, font, text_col, x, y):
     img = font.render(text,True,text_col)
     screen.blit(img, (x,y))
 
+
+
 run = True
+
+startButton = Button(
+    screen, 000, 100, 300, 150, text='login',
+    fontSize=50, margin=20,
+    inactiveColour=(255, 0, 0),
+    pressedColour=(0, 255, 0),
+    onClick=lambda: print('Click')
+)
+
 while run:
 
     screen.fill((255,255,255))
 
     draw_text("im crine", text_font, (255,0,255), 200, 100)
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             run = False
 
+
+    pygame_widgets.update(events)
     pygame.display.flip()
 
 pygame.quit()
