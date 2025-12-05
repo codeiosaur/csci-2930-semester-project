@@ -6,13 +6,27 @@ sqliteConnection = sqlite3.connect('DatabaseLocalCopy.db')
 cursor = sqliteConnection.cursor()
 
 class DatabaseManager:
-    emptyIDs = []
-    lastID = 0
-    def AddUser(self, username, password, userId): #fix
-        cursor.execute(f"""INSTERT INTO UserData ({username}, {password}, {userId})""")
-    def UpdateUser(self, username, userId):
-        cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userId}""")
-    def UpdateUser(self, password, userId):
-        cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userId}""")
-    def DeleteUser(self, userId): #fix
-        cursor.execute(f"""DELETE FROM UserData WHERE UserId = {userId}""")
+    
+    def __init__(self):
+        self.emptyIDs = []
+        self.lastID = 0
+
+    def AddUser(self, username, password):
+        password = hash(password)
+        if self.emptyIDs.length() == 0:
+            userID = self.lastID
+            self.lastID += 1
+        else:
+            userID = self.emptyIDs[0]
+            self.emptyIDs.pop(0)
+        cursor.execute(f"""INSTERT INTO UserData ({username}, {password}, {userID})""")
+
+    def UpdateUser(self, username, userID):
+        cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userID}""")
+
+    def UpdateUser(self, password, userID):
+        cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userID}""")
+
+    def DeleteUser(self, userID):
+        cursor.execute(f"""DELETE FROM UserData WHERE UserId = {userID}""")
+        self.emptyIDs.append[userID]
