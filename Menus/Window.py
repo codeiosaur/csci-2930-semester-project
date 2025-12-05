@@ -1,4 +1,5 @@
 import pygame
+from Menus import mainMenu
 class Window:
 
     def display(self):
@@ -6,6 +7,7 @@ class Window:
     def displayLeaderboard(self):
         pass
     def displayMain(self):
-        pass
+        mainMenu.initMainMenu()
     def displayGame(self):
         pass
+
