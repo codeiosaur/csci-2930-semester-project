@@ -4,6 +4,10 @@ from pygame_widgets.textbox import TextBox
 import Menus.utils as utils
 from Games import Pong
 
+def drawMenuText(screen):
+    text_font = pygame.font.SysFont("comicsans", 30)
+    utils.draw_text(screen, "Shall we play a game?", text_font, (0, 0, 0), 500, 100)
+
 def initSelectMenu(screen):
     utils.current_menu = "gameSelect"
     text_font = pygame.font.SysFont("comicsans", 30)
@@ -18,20 +22,8 @@ def initSelectMenu(screen):
         onClick=lambda: print("Play Pong!")
     )
 
-    # Text init
-    prompt = TextBox(
-        screen, int(460), int(100),
-        int(400), int(400),
-        fontSize=int(50),
-        colour=(255, 255, 255),
-        textColour=(0, 0, 0),
-        borderThickness=0,
-        isEditable=False
-    )
-    prompt.setText("Shall we play a game?")
-
     buttons = [pongButton]
-    textObjects = [prompt]
+    textObjects = []
     menuObjects = buttons + textObjects
 
     for object in menuObjects:

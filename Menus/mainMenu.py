@@ -1,17 +1,18 @@
 import pygame
 from pygame_widgets.button import Button
-from Menus.gameSelect import initSelectMenu
+from Menus.gameSelect import initSelectMenu, drawMenuText
 import Menus.utils as utils
 
 
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
-    utils.draw_text(screen, "Main Menu", text_font, (0, 0, 0), 430, 100)
+    utils.draw_text(screen, "Main Menu", text_font, (0, 0, 0), 500, 100)
 
 def initMainMenu(screen):
     def initGameSelect(screen):
         # Helper to switch menus
         utils.clear_objects()
+        drawMenuText(screen)
         initSelectMenu(screen)
 
     # Other initializations (non-button)
