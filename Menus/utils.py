@@ -17,20 +17,13 @@ def getScreenDims():
     screenHeight = info.current_h
     scaleX = screenWidth / REF_DIMS[0]
     scaleY = screenHeight / REF_DIMS[1]
-    # REF_DIMS = (1000, 800)  # Reference width, reference height
-    # SCREEN_INFO = pygame.display.Info()
-    # return {
-    #     'width': SCREEN_INFO.current_w,
-    #     'height': SCREEN_INFO.current_h,
-    #     'scale_x': SCREEN_INFO.current_w / REF_DIMS[0],
-    #     'scale_y': SCREEN_INFO.current_h / REF_DIMS[1]
-    # }
 
 # Function that draws text.
 # Does NOT automatically handle scaling, this must be done by the function caller.
 def draw_text(screen, text, font, text_col, x, y):
     img = font.render(text, True, text_col)
-    screen.blit(img, (x, y))
+    text_rect = img.get_rect(center=(int(x * scaleX), int(y * scaleY)))
+    screen.blit(img, text_rect)
 
 # Remove all objects i.e. widgets (used to switch menus)
 def clear_objects():

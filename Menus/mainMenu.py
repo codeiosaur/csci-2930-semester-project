@@ -1,32 +1,22 @@
 import pygame
 from pygame_widgets.button import Button
-from pygame_widgets.textbox import TextBox
 from Menus.gameSelect import initSelectMenu
 import Menus.utils as utils
-from Menus.utils import current_menu_objects
 
+
+def drawMenuText(screen):
+    text_font = pygame.font.SysFont("comicsans", 30)
+    utils.draw_text(screen, "Main Menu", text_font, (0, 0, 0), 430, 100)
 
 def initMainMenu(screen):
     def initGameSelect(screen):
-        #Helper to switch menus
+        # Helper to switch menus
         utils.clear_objects()
         initSelectMenu(screen)
 
     # Other initializations (non-button)
     text_font = pygame.font.SysFont("comicsans", 30)
-    bg_color = (255, 255, 255)
     pygame.display.set_caption("Main Window")
-
-    # Text init
-    title = TextBox(
-        screen, int(375 * utils.scaleX), int(100 * utils.scaleY),
-        int(400 * utils.scaleX), int(80 * utils.scaleY),
-        fontSize=int(50 * utils.scaleY),
-        colour=(255, 255, 255),
-        textColour=(0, 0, 0),
-        borderThickness = 0
-    )
-    title.setText("Main Menu")
 
     # Buttons init
     startButton = Button(
@@ -56,18 +46,13 @@ def initMainMenu(screen):
         onClick=lambda: print('Click')
     )
     buttons = [startButton, loginButton, settingsButton]
-    textObjects: list[TextBox] = [title]
+    textObjects = []
     menuObjects = buttons + textObjects
 
-    # Button resizing (only done once - no future resizing)
-    # for button in buttons:
-    #     button.setX(int(button.getX() * utils.scaleX))
-    #     button.setY(int(button.getY() * utils.scaleY))
-    #     button.setWidth(int(button.getWidth() * utils.scaleX))
-    #     button.setHeight(int(button.getHeight() * utils.scaleY))
+    # Object resizing (only done once - no future resizing)
     for object in menuObjects:
         object.setX(int(object.getX() * utils.scaleX))
         object.setY(int(object.getY() * utils.scaleY))
         object.setWidth(int(object.getWidth() * utils.scaleX))
         object.setHeight(int(object.getHeight() * utils.scaleY))
-        current_menu_objects.append(object)
+        utils.current_menu_objects.append(object)

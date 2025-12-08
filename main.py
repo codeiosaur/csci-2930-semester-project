@@ -9,6 +9,8 @@ def main():
     # Setting screen constants
     utils.getScreenDims()
 
+    print(pygame.font.get_fonts())
+
     # Create the screen.
     # scale_x = scale_y = 1
     # screen = pygame.display.set_mode((1000, 800))
@@ -37,6 +39,13 @@ def main():
                     elif utils.current_menu == "gameSelect":
                         # Go back to main menu
                         mainMenu.initMainMenu(screen)
+                        utils.current_menu = "main"
+
+        # Draw text
+        if utils.current_menu == "main":
+            mainMenu.drawMenuText(screen)
+        elif utils.current_menu == "gameSelect":
+            pass # add text later
 
         pygame_widgets.update(events)
         pygame.display.flip()
