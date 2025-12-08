@@ -1,5 +1,4 @@
 from Menus import mainMenu
-import pygame
 
 def main():
     mainMenu.initMainMenu()
