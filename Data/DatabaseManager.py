@@ -21,10 +21,11 @@ class DatabaseManager:
             self.emptyIDs.pop(0)
         cursor.execute(f"""INSTERT INTO UserData ({username}, {password}, {userID})""")
 
-    def UpdateUser(self, username, userID): #fix
+    def UpdateUser(self, username, userID):
         cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userID}""")
 
-    def UpdateUser(self, password, userID): #Fix
+    def UpdateUser(self, password, userID, hashtype): #Fix
+        hash = cursor.execute(f"""HASHBYTES()""")
         cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userID}""")
 
     def DeleteUser(self, userID):

@@ -1,13 +1,13 @@
 --Do Not Run
-CREATE DATABASE localCopy;
+CREATE DATABASE IF NOT EXISTS localCopy;
 
-CREATE TABLE UserData(
+CREATE TABLE IF NOT EXISTS UserData(
   Username varchar(255) NOT NULL,
   Password varchar(255) NOT NULL,
   ID int NOT NULL PRIMARY KEY
 );
   
-CREATE TABLE gameData(
+CREATE TABLE IF NOT EXISTS gameData(
   UserID int NOT NULL FOREIGN KEY REFERENCES UserData(ID),
   TimesPlayed varchar(255),
   Game varchar(255),
