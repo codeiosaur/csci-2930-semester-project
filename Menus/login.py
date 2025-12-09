@@ -13,6 +13,7 @@ def switchMenus(menu):
     utils.current_menu = menu
 
 def initLoginMenu(screen):
+    screenInfo = utils.getScreenDims()
     utils.clear_objects()
     drawMenuText(screen)
 
@@ -40,8 +41,8 @@ def initLoginMenu(screen):
 
     # Object resizing (only done once - no future resizing)
     for object in menuObjects:
-        object.setX(int(object.getX() * utils.scaleX))
-        object.setY(int(object.getY() * utils.scaleY))
-        object.setWidth(int(object.getWidth() * utils.scaleX))
-        object.setHeight(int(object.getHeight() * utils.scaleY))
-        utils.current_menu_objects.append(object)
+        object.setX(int(object.getX() * screenInfo["scaleX"]))
+        object.setY(int(object.getY() * screenInfo["scaleY"]))
+        object.setWidth(int(object.getWidth() * screenInfo["scaleX"]))
+        object.setHeight(int(object.getHeight() * screenInfo["scaleY"]))
+        utils.register_widget(object)

@@ -36,16 +36,16 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     if utils.current_menu == "main":
                         running = False  # Quit from main menu
-                    elif utils.current_menu == "gameSelect":
+                    elif utils.current_menu == "gameSelect" or utils.current_menu == "login":
                         # Go back to main menu
                         mainMenu.initMainMenu(screen)
                         utils.current_menu = "main"
 
         # Draw text
         if utils.current_menu == "main":
-            mainMenu.drawMenuText(screen)
+            mainMenu.initMainMenu(screen)
         elif utils.current_menu == "gameSelect":
-            gameSelect.drawMenuText(screen)
+            gameSelect.initSelectMenu(screen)
         elif utils.current_menu == "login":
             login.initLoginMenu(screen)
 

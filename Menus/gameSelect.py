@@ -1,6 +1,5 @@
 import pygame
 from pygame_widgets.button import Button
-from pygame_widgets.textbox import TextBox
 import Menus.utils as utils
 from Games import Pong
 
@@ -13,6 +12,7 @@ def switchMenus(menu):
     utils.current_menu = menu
 
 def initSelectMenu(screen):
+    screenInfo = utils.getScreenDims()
     utils.clear_objects()
     drawMenuText(screen)
 
@@ -34,8 +34,8 @@ def initSelectMenu(screen):
     menuObjects = buttons + textObjects
 
     for object in menuObjects:
-        object.setX(int(object.getX() * utils.scaleX))
-        object.setY(int(object.getY() * utils.scaleY))
-        object.setWidth(int(object.getWidth() * utils.scaleX))
-        object.setHeight(int(object.getHeight() * utils.scaleY))
-        utils.current_menu_objects.append(object)
+        object.setX(int(object.getX() * screenInfo["scaleX"]))
+        object.setY(int(object.getY() * screenInfo["scaleY"]))
+        object.setWidth(int(object.getWidth() * screenInfo["scaleX"]))
+        object.setHeight(int(object.getHeight() * screenInfo["scaleY"]))
+        utils.register_widget(object)
