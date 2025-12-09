@@ -1,40 +1,47 @@
 import pygame
-import pygame_widgets
 from pygame_widgets.button import Button
-def initLoginMenu():
-    pygame.init()
+from pygame_widgets.textbox import TextBox
+import Menus.utils as utils
 
-    SCREEN_WIDTH = 1000
-    SCREEN_HEIGHT = 800
 
-    print(pygame.font.get_fonts())
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
+def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
-    bg_color = (255, 255, 255)
+    utils.draw_text(screen, "Login or Sign up", text_font, (0, 0, 0), 500, 100)
+
+#method to switch between menus
+def switchMenus(menu):
+    utils.current_menu = menu
+
+def initLoginMenu(screen):
+    utils.clear_objects()
+    drawMenuText(screen)
+
+    utils.current_menu = "login"
+
+    # Other initializations (non-button)
+    text_font = pygame.font.SysFont("comicsans", 30)
     pygame.display.set_caption("Main Window")
 
-    def draw_text(text, font, text_col, x, y):
-        img = font.render(text, True, text_col)
-        screen.blit(img, (x, y))
+    usernameBox = TextBox(screen, 375, 200, 250, 80, placeholderText="Username:",
+                          fontSize=50, font=text_font,
+                          borderThickness=2, borderColour=(50,50,50))
 
-    running = True
+    settingsButton = Button(
+        screen, 425, 480, 150, 60, text='Settings', font= text_font,
+        fontSize=50, margin=20,
+        inactiveColour=(150, 150, 150),
+        hoverColour=(100,100,100),
+        pressedColour=(180, 180, 180),
+        onClick=lambda: print('Click')
+    )
+    buttons = [ settingsButton]
+    textObjects = [usernameBox]
+    menuObjects = buttons + textObjects
 
-    while running:
-
-        screen.fill(bg_color)
-
-        draw_text("pmo", text_font, (255, 0, 255), 430, 100)
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                running = False
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-
-        pygame_widgets.update(events)
-        pygame.display.flip()
-
-    pygame.quit()
+    # Object resizing (only done once - no future resizing)
+    for object in menuObjects:
+        object.setX(int(object.getX() * utils.scaleX))
+        object.setY(int(object.getY() * utils.scaleY))
+        object.setWidth(int(object.getWidth() * utils.scaleX))
+        object.setHeight(int(object.getHeight() * utils.scaleY))
+        utils.current_menu_objects.append(object)

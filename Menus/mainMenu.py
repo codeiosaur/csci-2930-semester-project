@@ -1,6 +1,5 @@
 import pygame
 from pygame_widgets.button import Button
-from Menus.gameSelect import initSelectMenu, drawMenuText
 import Menus.utils as utils
 
 
@@ -38,7 +37,7 @@ def initMainMenu(screen):
         inactiveColour=(250, 150, 0),
         hoverColour=(200,150,0),
         pressedColour=(220, 150, 0),
-        onClick=lambda: print('Click')
+        onClick=lambda: switchMenus("login")
     )
 
     settingsButton = Button(

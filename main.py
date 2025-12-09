@@ -1,6 +1,6 @@
 import pygame
 import pygame_widgets
-from Menus import mainMenu, gameSelect
+from Menus import mainMenu, gameSelect, login
 from Menus import utils as utils
 
 def main():
@@ -46,6 +46,9 @@ def main():
             mainMenu.initMainMenu(screen)
         elif utils.current_menu == "gameSelect":
             gameSelect.initSelectMenu(screen) # add text later
+        elif utils.current_menu == "login":
+            login.initLoginMenu(screen)
+
 
         pygame_widgets.update(events)
         pygame.display.flip()
