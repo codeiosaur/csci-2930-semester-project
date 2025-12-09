@@ -21,6 +21,7 @@ class BaseGame(ABC):
             self.clock.tick(60)
 
     def handle_events(self):
+        self.on_key(pygame.key.get_pressed())
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -29,7 +30,6 @@ class BaseGame(ABC):
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self.running = False  # Return to menu
             self.on_event(event)
-        self.on_key(pygame.key.get_pressed())
 
     # Initialize the game.
     @abstractmethod
@@ -37,10 +37,11 @@ class BaseGame(ABC):
         pass
 
     # Handle game-specific events other than key presses.
+    @abstractmethod
     def on_event(self, event):
         pass
 
-    # Handle all key presses.
+    # Handle key presses
     @abstractmethod
     def on_key(self, keys):
         pass
