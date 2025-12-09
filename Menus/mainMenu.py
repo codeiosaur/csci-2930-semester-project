@@ -6,7 +6,6 @@ def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, "Main Menu", text_font, (0, 0, 0), 500, 100)
 
-
 def initMainMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
