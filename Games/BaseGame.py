@@ -11,7 +11,7 @@ class BaseGame(ABC):
 
     def run(self):
         self.running = True
-        self.setup()  # Initialize game-specific stuff
+        self.setup()  # Initialize game-specific things
 
         while self.running:
             self.handle_events()
@@ -29,15 +29,20 @@ class BaseGame(ABC):
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self.running = False  # Return to menu
             self.on_event(event)
+        self.on_key(pygame.key.get_pressed())
 
     # Initialize the game.
     @abstractmethod
     def setup(self):
         pass
 
-    # Handle game-specific events.
-    @abstractmethod
+    # Handle game-specific events other than key presses.
     def on_event(self, event):
+        pass
+
+    # Handle all key presses.
+    @abstractmethod
+    def on_key(self, keys):
         pass
 
     # Update game logic (aka game loop).

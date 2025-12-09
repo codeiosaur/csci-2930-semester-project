@@ -1,4 +1,5 @@
 from Games.BaseGame import BaseGame as Game, pygame
+import random
 
 class Pong(Game):
     def __init__(self, screen):
@@ -22,11 +23,18 @@ class Pong(Game):
                                 20 * self.screenInfo["scaleX"],
                                 20 * self.screenInfo["scaleY"])
 
-    def on_event(self, event):
-        pass
+    def on_key(self, keys):
+        if keys[pygame.K_w] and not keys[pygame.K_s]:
+            self.paddle1.move_ip(0, -5)
+        elif keys[pygame.K_s] and not keys[pygame.K_w]:
+            self.paddle1.move_ip(0, 5)
+        if keys[pygame.K_UP] and not keys[pygame.K_DOWN]:
+            self.paddle2.move_ip(0, -5)
+        elif keys[pygame.K_DOWN] and not keys[pygame.K_UP]:
+            self.paddle2.move_ip(0, 5)
 
     def update(self):
-        pass
+        self.screen.fill(self.black)
 
     def draw(self):
         pygame.draw.rect(self.screen, self.white, self.paddle1)

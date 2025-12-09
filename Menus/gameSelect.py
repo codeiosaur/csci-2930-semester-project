@@ -33,8 +33,7 @@ def initSelectMenu(screen):
     )
 
     buttons = [pongButton]
-    textObjects = []
-    menuObjects = buttons + textObjects
+    menuObjects = buttons
 
     for object in menuObjects:
         object.setX(int(object.getX() * screenInfo["scaleX"]))
