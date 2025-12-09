@@ -31,7 +31,6 @@ def clear_objects():
     global current_menu_objects
     for object in current_menu_objects:
         object.hide()
-    current_objects = []
 
 # Add widget to tracking list
 def register_widget(widget):

@@ -58,4 +58,4 @@ def initMainMenu(screen):
         object.setY(int(object.getY() * utils.scaleY))
         object.setWidth(int(object.getWidth() * utils.scaleX))
         object.setHeight(int(object.getHeight() * utils.scaleY))
-        utils.current_menu_objects.append(object)
+        utils.register_widget(object)
