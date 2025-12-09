@@ -11,7 +11,7 @@ scaleX, scaleY = None, None
 # Get and return two tuples: the screen resolution and the correct scale factor.
 # Must have called pygame.init() before calling this function.
 def getScreenDims():
-    global screenWidth, screenHeight, scaleX, scaleY, current_menu
+    global screenWidth, screenHeight, scaleX, scaleY, current_menu, REF_DIMS
     info = pygame.display.Info()
     screenWidth = info.current_w
     screenHeight = info.current_h
