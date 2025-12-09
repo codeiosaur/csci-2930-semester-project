@@ -4,12 +4,15 @@ import random
 class Pong(Game):
     def __init__(self, screen):
         super().__init__(screen)
-        self.black = (0, 0, 0)
-        self.white = (255, 255, 255)
+        # Other constants
+        self.BLACK = (0, 0, 0)
+        self.WHITE = (255, 255, 255)
         self.run()
 
     def setup(self):
-        self.screen.fill(self.black)
+        self.screen.fill(self.BLACK)
+        # Score
+        self.score = 0
         # Paddle definition
         self.paddleDims = (20, 200)  # Default paddle width/height; used for collisions
         self.paddleSpeed = int(0.02 * self.screenInfo["height"]) # max paddle speed
@@ -37,8 +40,7 @@ class Pong(Game):
         self.paddle2.scale_by_ip(self.screenInfo["scaleX"], self.screenInfo["scaleY"])
         self.ball.scale_by_ip(self.screenInfo["scaleX"], self.screenInfo["scaleY"])
 
-    # Does nothing but required
-    # for BaseGame inheritance declaration.
+    # Does nothing but required for BaseGame inheritance declaration.
     def on_event(self, event):
         pass
 
@@ -65,7 +67,11 @@ class Pong(Game):
         height = self.screenInfo["height"]
         # Move ball
         self.ball.move_ip(self.ballSpeed[0], self.ballSpeed[1])
-        # Ball collision (is the ball touching the screen edge?)
+        # Ball collision
+        # Is the ball touching the left/right edge?
+        if self.ball.left < 0 or self.ball.right > self.screenInfo["width"]:
+            self.running = False # end the game
+        # Is the ball touching the top/bottom edge?
         if self.ball.top < 0:
             self.ball.top = 0
             self.ballSpeed[1] *= -1
@@ -74,7 +80,7 @@ class Pong(Game):
             self.ballSpeed[1] *= -1
         # Is the ball touching one of the paddles?
         if self.ball.colliderect(self.paddle1) and self.ballSpeed[0] < 0:
-            self.ballSpeed[0] *= -1
+            self.ballSpeed[0] *= -1; self.score += 1
             # Change angle based on hit position
             ballHitPos = (self.ball.centery - self.paddle1.top) / self.paddle1.height
             self.ballSpeed[1] = (int((ballHitPos - 0.5) * 1.2 * self.ballBaseSpeed)
@@ -83,7 +89,7 @@ class Pong(Game):
             self.ballSpeed[1] += int(self.paddleVelocity[0] * 0.3)
 
         elif self.ball.colliderect(self.paddle2) and self.ballSpeed[0] > 0:
-            self.ballSpeed[0] *= -1
+            self.ballSpeed[0] *= -1; self.score += 1
             # Change angle based on hit position
             ballHitPos = (self.ball.centery - self.paddle2.top) / self.paddle2.height
             self.ballSpeed[1] = (int((ballHitPos - 0.5) * 2.4 * self.ballBaseSpeed)
@@ -99,7 +105,7 @@ class Pong(Game):
                 paddle.bottom = height
 
     def draw(self):
-        self.screen.fill(self.black)
-        pygame.draw.rect(self.screen, self.white, self.paddle1)
-        pygame.draw.rect(self.screen, self.white, self.paddle2)
-        pygame.draw.rect(self.screen, self.white, self.ball)
+        self.screen.fill(self.BLACK)
+        pygame.draw.rect(self.screen, self.WHITE, self.paddle1)
+        pygame.draw.rect(self.screen, self.WHITE, self.paddle2)
+        pygame.draw.rect(self.screen, self.WHITE, self.ball)

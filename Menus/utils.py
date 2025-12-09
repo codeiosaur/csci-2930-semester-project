@@ -2,6 +2,7 @@ import pygame
 
 current_menu_objects = []
 current_menu = None
+previous_game = None
 
 # Set global variables regarding the screen resolution.
 def getScreenDims():
@@ -18,13 +19,13 @@ def getScreenDims():
     }
 
 # Function that draws text.
-# Does NOT automatically handle scaling, this must be done by the function caller.
+# Automatically handle display scaling for location but not font size.
 def draw_text(screen, text, font, text_col, x, y):
     screenInfo = getScreenDims()
     img = font.render(text, True, text_col)
     text_rect = img.get_rect(center=(int(x * screenInfo["scaleX"]), int(y * screenInfo["scaleY"])))
     screen.blit(img, text_rect)
-    return (int(x * screenInfo["scaleX"]), int(y * screenInfo["scaleY"]))
+    return int(x * screenInfo["scaleX"]), int(y * screenInfo["scaleY"])
 
 # Remove all objects i.e. widgets (used to switch menus)
 def clear_objects():
@@ -41,3 +42,7 @@ def register_widget(widget):
 def switchMenus(menu):
     global current_menu
     current_menu = menu
+
+def setPreviousGame(game):
+    global previous_game
+    previous_game = game

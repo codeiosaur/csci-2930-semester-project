@@ -11,7 +11,7 @@ def initMainMenu(screen):
     utils.clear_objects()
     drawMenuText(screen)
 
-    utils.current_menu = "main"
+    utils.switchMenus("main")
 
     # Other initializations (non-button)
     text_font = pygame.font.SysFont("comicsans", 30)

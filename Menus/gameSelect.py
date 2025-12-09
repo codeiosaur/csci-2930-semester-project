@@ -1,25 +1,24 @@
 import pygame
 from pygame_widgets.button import Button
-import Menus.utils as utils
+from Menus import utils as utils, gameOver
+from Menus.gameOver import initGameOverMenu
 from Games import Pong
 
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, "Shall we play a game?", text_font, (0, 0, 0), 500, 100)
 
-#method to switch between menus
-def switchMenus(menu):
-    utils.current_menu = menu
-
 def startPong(screen):
-    pongGame = Pong.Pong(screen)
+    Pong.Pong(screen) # If this stops executing, the game must have ended.
+    utils.setPreviousGame("Pong")
+    initGameOverMenu(screen)
 
 def initSelectMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
     drawMenuText(screen)
 
-    utils.current_menu = "gameSelect"
+    utils.switchMenus("gameSelect")
     text_font = pygame.font.SysFont("comicsans", 30)
 
     # Buttons init
