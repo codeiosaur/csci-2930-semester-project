@@ -4,8 +4,8 @@ from pygame_widgets.button import Button
 
 def drawMenuText(screen, winner=False):
     # Draw game over text
-    text_font = pygame.font.SysFont("menlo", int(45))
-    if winner is True:
+    text_font = pygame.font.SysFont("menlo", 45)
+    if winner:
         utils.draw_text(screen, "You Win!", text_font,
                         (25, 255, 25), 500, 200)
     else:
@@ -16,7 +16,7 @@ def restartPrevGame(screen):
     utils.clear_objects()
     if utils.previous_game is None:
        return # no previous game played
-    elif utils.previous_game is "Pong":
+    elif utils.previous_game == "Pong":
         from Menus.gameSelect import startPong
         startPong(screen)
 
@@ -24,6 +24,7 @@ def restartPrevGame(screen):
 def initGameOverMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
+    screen.fill((0, 0, 0))
     drawMenuText(screen)
 
     utils.switchMenus("gameOver")
@@ -31,7 +32,7 @@ def initGameOverMenu(screen):
 
     restart_button = Button(
         screen,350, 350, 300, 80,
-        text='Play Again',
+        text='Play Again', font = text_font,
         fontSize=50, margin=20,
         inactiveColour=(0, 200, 0),
         hoverColour=(0, 150, 0),
@@ -39,10 +40,9 @@ def initGameOverMenu(screen):
         onClick=lambda: restartPrevGame(screen)
     )
 
-    # Game selection button
     select_button = Button(
         screen,350, 450, 300, 80,
-        text='Other Games',
+        text='Other Games', font = text_font,
         fontSize=50, margin=20,
         inactiveColour=(225, 200, 0),
         hoverColour=(200, 175, 0),
@@ -52,7 +52,7 @@ def initGameOverMenu(screen):
 
     menu_button = Button(
         screen,350, 550, 300, 80,
-        text='Exit to Menu',
+        text='Exit to Menu', font = text_font,
         fontSize=50, margin=20,
         inactiveColour=(150, 150, 150),
         hoverColour=(100, 100, 100),
@@ -67,5 +67,3 @@ def initGameOverMenu(screen):
         button.setWidth(int(button.getWidth() * screenInfo["scaleX"]))
         button.setHeight(int(button.getHeight() * screenInfo["scaleY"]))
         utils.register_widget(button)
-
-    screen.fill((0, 0, 0))

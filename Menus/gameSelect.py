@@ -16,6 +16,7 @@ def startPong(screen):
 def initSelectMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
+    screen.fill((255, 255, 255))
     drawMenuText(screen)
 
     utils.switchMenus("gameSelect")
@@ -32,11 +33,10 @@ def initSelectMenu(screen):
     )
 
     buttons = [pongButton]
-    menuObjects = buttons
 
-    for object in menuObjects:
-        object.setX(int(object.getX() * screenInfo["scaleX"]))
-        object.setY(int(object.getY() * screenInfo["scaleY"]))
-        object.setWidth(int(object.getWidth() * screenInfo["scaleX"]))
-        object.setHeight(int(object.getHeight() * screenInfo["scaleY"]))
-        utils.register_widget(object)
+    for button in buttons:
+        button.setX(int(button.getX() * screenInfo["scaleX"]))
+        button.setY(int(button.getY() * screenInfo["scaleY"]))
+        button.setWidth(int(button.getWidth() * screenInfo["scaleX"]))
+        button.setHeight(int(button.getHeight() * screenInfo["scaleY"]))
+        utils.register_widget(button)

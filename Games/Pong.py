@@ -1,4 +1,5 @@
 from Games.BaseGame import BaseGame as Game, pygame
+from Menus.utils import draw_text as drawText
 import random
 
 class Pong(Game):
@@ -11,8 +12,9 @@ class Pong(Game):
 
     def setup(self):
         self.screen.fill(self.BLACK)
-        # Score
+        # Score-related things
         self.score = 0
+        self.font = pygame.font.SysFont("menlo", 45)
         # Paddle definition
         self.paddleDims = (20, 200)  # Default paddle width/height; used for collisions
         self.paddleSpeed = int(0.02 * self.screenInfo["height"]) # max paddle speed
@@ -109,3 +111,4 @@ class Pong(Game):
         pygame.draw.rect(self.screen, self.WHITE, self.paddle1)
         pygame.draw.rect(self.screen, self.WHITE, self.paddle2)
         pygame.draw.rect(self.screen, self.WHITE, self.ball)
+        drawText(self.screen, f"{self.score}", self.font, self.WHITE, 500, 100)
