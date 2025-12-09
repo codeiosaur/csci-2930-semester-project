@@ -25,9 +25,12 @@ class DatabaseManager:
         cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userID}""")
 
     def UpdateUser(self, password, userID, hashtype): #Fix
-        hash = cursor.execute(f"""HASHBYTES()""")
+        hash = cursor.execute(f"""HASHBYTES""")
         cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userID}""")
 
     def DeleteUser(self, userID):
         cursor.execute(f"""DELETE FROM UserData WHERE UserId = {userID}""")
         self.emptyIDs.append[userID]
+
+#import subprocess
+#subprocess.run(git pull)
