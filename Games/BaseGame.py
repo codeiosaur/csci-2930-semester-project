@@ -41,7 +41,7 @@ class BaseGame(ABC):
     def on_event(self, event):
         pass
 
-    # Handle key presses
+    # Handle key presses.
     @abstractmethod
     def on_key(self, keys):
         pass
