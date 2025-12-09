@@ -4,9 +4,7 @@ from Menus import mainMenu, gameSelect, login
 from Menus import utils as utils
 
 def main():
-    pygame.init()
-
-    # Setting screen constants
+    # Setting screen constants (calls pygame.init() automatically)
     screenInfo = utils.getScreenDims()
 
     print(pygame.font.get_fonts())
@@ -14,7 +12,8 @@ def main():
     # Create the screen.
     # scale_x = scale_y = 1
     # screen = pygame.display.set_mode((1000, 800))
-    screen = pygame.display.set_mode((screenInfo["width"], screenInfo["height"]))
+    screen = pygame.display.set_mode((screenInfo["width"], screenInfo["height"]),
+                                     pygame.HWSURFACE | pygame.DOUBLEBUF)
 
     # Initialize main menu
     utils.current_menu = "main"
