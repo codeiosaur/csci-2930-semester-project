@@ -8,7 +8,7 @@ REF_DIMS = (1000, 800) # Reference width, reference height
 screenWidth, screenHeight = None, None
 scaleX, scaleY = None, None
 
-# Get and return two tuples: the screen resolution and the correct scale factor.
+# Set global variables regarding the screen resolution.
 # Must have called pygame.init() before calling this function.
 def getScreenDims():
     global screenWidth, screenHeight, scaleX, scaleY, current_menu, REF_DIMS
@@ -24,6 +24,7 @@ def draw_text(screen, text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     text_rect = img.get_rect(center=(int(x * scaleX), int(y * scaleY)))
     screen.blit(img, text_rect)
+    return (int(x * scaleX), int(y * scaleY))
 
 # Remove all objects i.e. widgets (used to switch menus)
 def clear_objects():
