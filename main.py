@@ -43,12 +43,11 @@ def main():
 
         # Draw text
         if utils.current_menu == "main":
-            mainMenu.initMainMenu(screen)
+            mainMenu.drawMenuText(screen)
         elif utils.current_menu == "gameSelect":
-            gameSelect.initSelectMenu(screen) # add text later
+            gameSelect.drawMenuText(screen)
         elif utils.current_menu == "login":
             login.initLoginMenu(screen)
-
 
         pygame_widgets.update(events)
         pygame.display.flip()

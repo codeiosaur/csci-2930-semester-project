@@ -7,13 +7,13 @@ import Menus.utils as utils
 def _screenTestHelper(caption):
     import os
     os.environ["SDL_VIDEODRIVER"] = "dummy"
+    screenInfo = utils.getScreenDims()
     if pygame.get_init():
-        return None
+        return pygame.display.set_mode((screenInfo["width"], screenInfo["height"]))
     else:
         pygame.init()
         pygame.display.set_caption(caption)
-        utils.getScreenDims()
-        screen = pygame.display.set_mode((utils.screenWidth, utils.screenHeight))
+        screen = pygame.display.set_mode((screenInfo["width"], screenInfo["height"]))
         return screen
 
 # Helper method used for various widget tests
@@ -57,23 +57,25 @@ def _initButtons(screen, text_font):
 
 def test_getScreenDims():
     pygame.init() # Needed for getScreenDims to work
-    utils.getScreenDims()
-    screenInfo = pygame.display.Info()
-    assert utils.REF_DIMS == (1000, 800), "REF_DIMS not match expected value"
-    assert utils.screenWidth == screenInfo.current_w, "utils.screenWidth does not match resolution!"
-    assert utils.screenHeight == screenInfo.current_h, "utils.screenHeight does not match resolution!"
+    originalInfo = pygame.display.Info()
+    newInfo = utils.getScreenDims()
+    assert newInfo["width"] == originalInfo.current_w,\
+        "screenWidth does not match resolution!"
+    assert newInfo["height"] == originalInfo.current_h, \
+        "screenHeight does not match resolution!"
     pygame.quit()
 
 # utils.draw_text relies on graphics that we can't test directly,
 # so we test the logic instead.
 def test_draw_text():
     screen = _screenTestHelper("Testing Draw Text")
+    screenInfo = utils.getScreenDims()
     text_font = pygame.font.SysFont("menlo", 30)
     textX = 500; textY = 400 # text coordinates
     coords = utils.draw_text(screen, "Shall we do a test?", text_font,
                              (0, 0 ,0), textX, textY)
-    assert coords[0] == int(500 * utils.scaleX), f"Expected {textX} * utils.scaleX, got {coords[0]}"
-    assert coords[1] == int(400 * utils.scaleY), f"Expected {textY} * utils.scaleX, got {coords[1]}"
+    assert coords[0] == int(500 * screenInfo["scaleX"]), f"Expected {textX * screenInfo["scaleX"]}, got {coords[0]}"
+    assert coords[1] == int(400 * screenInfo["scaleY"]), f"Expected {textY * screenInfo["scaleY"]}, got {coords[1]}"
 
 def test_register_widget():
     screen = _screenTestHelper("Testing Buttons")
@@ -90,15 +92,16 @@ def test_register_widget():
     utils.clear_objects()
 
 def test_widget_scaling():
+    screenInfo = utils.getScreenDims()
     screen = _screenTestHelper("Testing Buttons")
     text_font = pygame.font.SysFont("arialunicode", 30)
     buttons, origCoords, origDims = _initButtons(screen, text_font)
 
     for object in buttons:
-        object.setX(int(object.getX() * utils.scaleX))
-        object.setY(int(object.getY() * utils.scaleY))
-        object.setWidth(int(object.getWidth() * utils.scaleX))
-        object.setHeight(int(object.getHeight() * utils.scaleY))
+        object.setX(int(object.getX() * screenInfo["width"]))
+        object.setY(int(object.getY() * screenInfo["height"]))
+        object.setWidth(int(object.getWidth() * screenInfo["width"]))
+        object.setHeight(int(object.getHeight() * screenInfo["height"]))
         utils.register_widget(object)
 
     epsilon = 0.5
@@ -106,11 +109,11 @@ def test_widget_scaling():
         # Because of rounding when setting the coordinates, if we try to compare
         # the scaled and original coordinates directly the tests would fail.
         # So we simply check if they are close to each other instead.
-        assert abs(buttons[i].getX() / utils.scaleX - origCoords[i][0]) < epsilon,\
+        assert abs(buttons[i].getX() / screenInfo["width"] - origCoords[i][0]) < epsilon,\
             f"button{i}.X = {buttons[i].getX()}"
-        assert abs(buttons[i].getY() / utils.scaleY - origCoords[i][1]) < epsilon, \
+        assert abs(buttons[i].getY() / screenInfo["height"] - origCoords[i][1]) < epsilon, \
             f"button{i}.Y = {buttons[i].getY()}"
-        assert abs(buttons[i].getWidth() / utils.scaleX - origDims[i][0]) < epsilon, \
+        assert abs(buttons[i].getWidth() / screenInfo["width"] - origDims[i][0]) < epsilon, \
             f"button{i}.X = {buttons[i].getX()}"
-        assert abs(buttons[i].getHeight() / utils.scaleY - origDims[i][1]) < epsilon, \
+        assert abs(buttons[i].getHeight() / screenInfo["height"] - origDims[i][1]) < epsilon, \
             f"button{i}.Y = {buttons[i].getY()}"

@@ -3,13 +3,12 @@ import pygame
 current_menu_objects = []
 current_menu = None
 
-REF_DIMS = (1000, 800) # Reference width, reference height
-
 # Set global variables regarding the screen resolution.
 def getScreenDims():
     if not pygame.get_init():
         pygame.init()
-    global REF_DIMS, current_menu
+    global current_menu
+    REF_DIMS = (1000, 800)  # Reference width, reference height
     info = pygame.display.Info()
     return {
         "width": info.current_w,
@@ -37,3 +36,8 @@ def clear_objects():
 def register_widget(widget):
     current_menu_objects.append(widget)
     return widget
+
+#method to switch between menus
+def switchMenus(menu):
+    global current_menu
+    current_menu = menu

@@ -2,16 +2,13 @@ import pygame
 from pygame_widgets.button import Button
 import Menus.utils as utils
 
-
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, "Main Menu", text_font, (0, 0, 0), 500, 100)
 
-#method to switch between menus
-def switchMenus(menu):
-    utils.current_menu = menu
 
 def initMainMenu(screen):
+    screenInfo = utils.getScreenDims()
     utils.clear_objects()
     drawMenuText(screen)
 
@@ -28,7 +25,7 @@ def initMainMenu(screen):
         inactiveColour=(0, 200, 0),
         hoverColour=(0,150,0),
         pressedColour=(0, 220, 0),
-        onClick=lambda: switchMenus("gameSelect")
+        onClick=lambda: utils.switchMenus("gameSelect")
     )
 
     loginButton = Button(
@@ -37,7 +34,7 @@ def initMainMenu(screen):
         inactiveColour=(250, 150, 0),
         hoverColour=(200,150,0),
         pressedColour=(220, 150, 0),
-        onClick=lambda: switchMenus("login")
+        onClick=lambda: utils.switchMenus("login")
     )
 
     settingsButton = Button(
@@ -49,13 +46,12 @@ def initMainMenu(screen):
         onClick=lambda: print('Click')
     )
     buttons = [startButton, loginButton, settingsButton]
-    textObjects = []
-    menuObjects = buttons + textObjects
+    menuObjects = buttons
 
     # Object resizing (only done once - no future resizing)
     for object in menuObjects:
-        object.setX(int(object.getX() * utils.scaleX))
-        object.setY(int(object.getY() * utils.scaleY))
-        object.setWidth(int(object.getWidth() * utils.scaleX))
-        object.setHeight(int(object.getHeight() * utils.scaleY))
+        object.setX(int(object.getX() * screenInfo["scaleX"]))
+        object.setY(int(object.getY() * screenInfo["scaleY"]))
+        object.setWidth(int(object.getWidth() * screenInfo["scaleX"]))
+        object.setHeight(int(object.getHeight() * screenInfo["scaleY"]))
         utils.register_widget(object)
