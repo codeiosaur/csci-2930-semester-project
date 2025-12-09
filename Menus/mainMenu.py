@@ -8,12 +8,15 @@ def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, "Main Menu", text_font, (0, 0, 0), 500, 100)
 
+#method to switch between menus
+def switchMenus(menu):
+    utils.current_menu = menu
+
 def initMainMenu(screen):
-    def initGameSelect(screen):
-        # Helper to switch menus
-        utils.clear_objects()
-        drawMenuText(screen)
-        initSelectMenu(screen)
+    utils.clear_objects()
+    drawMenuText(screen)
+
+    utils.current_menu = "main"
 
     # Other initializations (non-button)
     text_font = pygame.font.SysFont("comicsans", 30)
@@ -26,7 +29,7 @@ def initMainMenu(screen):
         inactiveColour=(0, 200, 0),
         hoverColour=(0,150,0),
         pressedColour=(0, 220, 0),
-        onClick=lambda: initGameSelect(screen)
+        onClick=lambda: switchMenus("gameSelect")
     )
 
     loginButton = Button(

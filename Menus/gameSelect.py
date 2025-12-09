@@ -8,7 +8,14 @@ def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, "Shall we play a game?", text_font, (0, 0, 0), 500, 100)
 
+#method to switch between menus
+def switchMenus(menu):
+    utils.current_menu = menu
+
 def initSelectMenu(screen):
+    utils.clear_objects()
+    drawMenuText(screen)
+
     utils.current_menu = "gameSelect"
     text_font = pygame.font.SysFont("comicsans", 30)
 
