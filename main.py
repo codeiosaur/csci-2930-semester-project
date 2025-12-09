@@ -30,8 +30,9 @@ def main():
                         running = False  # Quit from main menu
                     elif utils.current_menu == "gameSelect" or utils.current_menu == "login":
                         # Go back to main menu
-                        mainMenu.initMainMenu(screen)
                         utils.current_menu = "main"
+                    elif utils.current_menu == "gameOver":
+                        utils.current_menu = "gameSelect"
 
         # Draw text
         if utils.current_menu == "main":

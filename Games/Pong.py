@@ -1,5 +1,5 @@
 from Games.BaseGame import BaseGame as Game, pygame
-from Menus.utils import draw_text as drawText
+from Menus.utils import draw_text as drawText, setPreviousWinner as setWinner
 import random
 
 class Pong(Game):
@@ -12,7 +12,7 @@ class Pong(Game):
 
     def setup(self):
         self.screen.fill(self.BLACK)
-        # Score-related things
+        # Score/winner-related things
         self.score = 0
         self.font = pygame.font.SysFont("menlo", 45)
         # Paddle definition
@@ -25,6 +25,7 @@ class Pong(Game):
         self.paddle2 = pygame.Rect(0.9 * self.screenInfo["width"],
                                    0.375 * self.screenInfo["height"],
                                    self.paddleDims[0], self.paddleDims[1])
+        self.paddleCounter = 0 # used for paddle AI
         # Ball definition
         self.ballDims = (20, 20)  # Default ball radius; used for collisions
         self.ballBaseSpeed = 0.01 * self.screenInfo["height"]
@@ -55,24 +56,33 @@ class Pong(Game):
             self.paddleVelocity[0] = self.paddleSpeed
         else:
             self.paddleVelocity[0] = 0
-        if keys[pygame.K_UP] and not keys[pygame.K_DOWN]:
-            self.paddle2.move_ip(0, -self.paddleSpeed)
-            self.paddleVelocity[1] = -self.paddleSpeed
-        elif keys[pygame.K_DOWN] and not keys[pygame.K_UP]:
-            self.paddle2.move_ip(0, self.paddleSpeed)
-            self.paddleVelocity[1] = -self.paddleSpeed
-        else:
-            self.paddleVelocity[1] = 0
 
     def update(self):
+        self.paddleCounter += 1
         paddles = [self.paddle1, self.paddle2]
         height = self.screenInfo["height"]
         # Move ball
         self.ball.move_ip(self.ballSpeed[0], self.ballSpeed[1])
+        # Move other paddle - but only every other frame.
+        # Reduces stuttering.
+        if self.paddleCounter % 2 == 0:
+            if self.ball.centery - self.paddle2.centery < -10:
+                self.paddle2.move_ip(0, int(-self.paddleSpeed * 0.75))
+                self.paddleVelocity[1] = int(-self.paddleSpeed * 0.75)
+            elif self.ball.centery > self.paddle2.centery:
+                self.paddle2.move_ip(0, int(self.paddleSpeed * 0.75))
+                self.paddleVelocity[1] = int(self.paddleSpeed * 0.75)
+            self.paddleCounter = 0
+
         # Ball collision
         # Is the ball touching the left/right edge?
-        if self.ball.left < 0 or self.ball.right > self.screenInfo["width"]:
+        # If so, end the game and declare the winner.
+        if self.ball.left < 0:
             self.running = False # end the game
+            setWinner(False) # player lost
+        if self.ball.right > self.screenInfo["width"]:
+            self.running = False
+            setWinner(True) # player won
         # Is the ball touching the top/bottom edge?
         if self.ball.top < 0:
             self.ball.top = 0
@@ -82,16 +92,27 @@ class Pong(Game):
             self.ballSpeed[1] *= -1
         # Is the ball touching one of the paddles?
         if self.ball.colliderect(self.paddle1) and self.ballSpeed[0] < 0:
-            self.ballSpeed[0] *= -1; self.score += 1
+            self.ballSpeed[0] *= -1 + random.uniform(-0.5, 0.5); self.score += 1
+            # Normalize x-axis speed
+            if abs(self.ballSpeed[0]) < self.ballBaseSpeed:
+                if self.ballSpeed[0] > 0:
+                    self.ballSpeed[0] = self.ballBaseSpeed
+                else:
+                    self.ballSpeed[0] = -self.ballBaseSpeed
             # Change angle based on hit position
             ballHitPos = (self.ball.centery - self.paddle1.top) / self.paddle1.height
-            self.ballSpeed[1] = (int((ballHitPos - 0.5) * 1.2 * self.ballBaseSpeed)
-                                 + random.uniform(-0.5, 0.5))
-            # paddle momemtum
+            self.ballSpeed[1] = (int((ballHitPos - 0.5) * 1.2 * self.ballBaseSpeed))
+            # paddle momentum
             self.ballSpeed[1] += int(self.paddleVelocity[0] * 0.3)
 
         elif self.ball.colliderect(self.paddle2) and self.ballSpeed[0] > 0:
-            self.ballSpeed[0] *= -1; self.score += 1
+            self.ballSpeed[0] *= -1 + random.uniform(-0.5, 0.5)
+            # Normalize x-axis speed
+            if abs(self.ballSpeed[0]) < self.ballBaseSpeed:
+                if self.ballSpeed[0] > 0:
+                    self.ballSpeed[0] = self.ballBaseSpeed
+                else:
+                    self.ballSpeed[0] = -self.ballBaseSpeed
             # Change angle based on hit position
             ballHitPos = (self.ball.centery - self.paddle2.top) / self.paddle2.height
             self.ballSpeed[1] = (int((ballHitPos - 0.5) * 2.4 * self.ballBaseSpeed)

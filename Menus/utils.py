@@ -3,6 +3,7 @@ import pygame
 current_menu_objects = []
 current_menu = None
 previous_game = None
+previous_winner = None # previous game winner
 
 # Set global variables regarding the screen resolution.
 def getScreenDims():
@@ -46,3 +47,7 @@ def switchMenus(menu):
 def setPreviousGame(game):
     global previous_game
     previous_game = game
+
+def setPreviousWinner(winner):
+    global previous_winner
+    previous_winner = winner

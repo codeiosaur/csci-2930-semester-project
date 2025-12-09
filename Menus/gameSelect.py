@@ -1,7 +1,6 @@
 import pygame
 from pygame_widgets.button import Button
-from Menus import utils as utils, gameOver
-from Menus.gameOver import initGameOverMenu
+from Menus import utils as utils
 from Games import Pong
 
 def drawMenuText(screen):
@@ -11,7 +10,7 @@ def drawMenuText(screen):
 def startPong(screen):
     Pong.Pong(screen) # If this stops executing, the game must have ended.
     utils.setPreviousGame("Pong")
-    initGameOverMenu(screen)
+    utils.switchMenus("gameOver")
 
 def initSelectMenu(screen):
     screenInfo = utils.getScreenDims()

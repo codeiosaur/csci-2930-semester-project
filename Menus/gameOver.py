@@ -2,15 +2,19 @@ import pygame
 import Menus.utils as utils
 from pygame_widgets.button import Button
 
-def drawMenuText(screen, winner=False):
+def drawMenuText(screen):
     # Draw game over text
     text_font = pygame.font.SysFont("menlo", 45)
-    if winner:
+    winner = utils.previous_winner
+    if winner is True:
         utils.draw_text(screen, "You Win!", text_font,
                         (25, 255, 25), 500, 200)
-    else:
+    elif winner is False:
         utils.draw_text(screen, "Game Over!", text_font,
                         (255, 25, 25), 500, 200)
+    else:
+        utils.draw_text(screen, "Game Ended.", text_font,
+                        (255, 255, 255), 500, 200)
 
 def restartPrevGame(screen):
     utils.clear_objects()
