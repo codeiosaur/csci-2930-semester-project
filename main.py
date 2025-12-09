@@ -7,14 +7,14 @@ def main():
     pygame.init()
 
     # Setting screen constants
-    utils.getScreenDims()
+    screenInfo = utils.getScreenDims()
 
     print(pygame.font.get_fonts())
 
     # Create the screen.
     # scale_x = scale_y = 1
     # screen = pygame.display.set_mode((1000, 800))
-    screen = pygame.display.set_mode((utils.screenWidth, utils.screenHeight))
+    screen = pygame.display.set_mode((screenInfo["width"], screenInfo["height"]))
 
     # Initialize main menu
     utils.current_menu = "main"
