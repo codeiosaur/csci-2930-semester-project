@@ -11,6 +11,9 @@ def drawMenuText(screen):
 def switchMenus(menu):
     utils.current_menu = menu
 
+def startPong(screen):
+    pongGame = Pong.Pong(screen)
+
 def initSelectMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
@@ -26,7 +29,7 @@ def initSelectMenu(screen):
         inactiveColour=(150, 150, 150),
         hoverColour=(100, 100, 100),
         pressedColour=(180, 180, 180),
-        onClick=lambda: print("Play Pong!")
+        onClick=lambda: startPong(screen)
     )
 
     buttons = [pongButton]

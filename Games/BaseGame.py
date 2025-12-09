@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 import pygame
+from Menus.utils import getScreenDims
 
 class BaseGame(ABC):
-    def __init__(self, screen, scale_x, scale_y):
+    def __init__(self, screen):
         self.screen = screen
-        self.scale_x = scale_x
-        self.scale_y = scale_y
+        self.screenInfo = getScreenDims()
         self.running = False
         self.clock = pygame.time.Clock()
 
