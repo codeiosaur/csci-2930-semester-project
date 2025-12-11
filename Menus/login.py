@@ -3,14 +3,15 @@ from pygame_widgets.button import Button
 from pygame_widgets.textbox import TextBox
 import Menus.utils as utils
 
+loggingIn = False
 
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, "Login or Sign up", text_font, (0, 0, 0), 500, 100)
 
-#method to switch between menus
-def switchMenus(menu):
-    utils.current_menu = menu
+
+def login(username, password):
+    pass
 
 def initLoginMenu(screen):
     screenInfo = utils.getScreenDims()
@@ -18,7 +19,7 @@ def initLoginMenu(screen):
     drawMenuText(screen)
 
     utils.current_menu = "login"
-
+    login.loggingIn = True
     # Other initializations (non-button)
     text_font = pygame.font.SysFont("comicsans", 30)
     pygame.display.set_caption("Main Window")
@@ -33,7 +34,7 @@ def initLoginMenu(screen):
         inactiveColour=(150, 150, 150),
         hoverColour=(100,100,100),
         pressedColour=(180, 180, 180),
-        onClick=lambda: print('Click')
+        onClick=lambda: login(usernameBox.getText(),"test")
     )
     buttons = [ settingsButton]
     textObjects = [usernameBox]

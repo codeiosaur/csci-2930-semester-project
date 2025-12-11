@@ -1,21 +1,34 @@
 import pygame
 import pygame_widgets
-from Menus import mainMenu, gameSelect, login, gameOver
+from pygame import MOUSEBUTTONDOWN
+
+from Menus import mainMenu, gameSelect, login
 from Menus import utils as utils
 
+
+
 def main():
-    # Setting screen constants (automatically calls pygame.init())
+    pygame.init()
+
+    # Setting screen constants
     screenInfo = utils.getScreenDims()
+
+    print(pygame.font.get_fonts())
+
     # Create the screen.
-    #screen = pygame.display.set_mode((1000, 800))
+    # scale_x = scale_y = 1
+    # screen = pygame.display.set_mode((1000, 800))
     screen = pygame.display.set_mode((screenInfo["width"], screenInfo["height"]),
                                      pygame.HWSURFACE | pygame.DOUBLEBUF)
+
+    # Initialize main menu
+    utils.current_menu = "main"
+    mainMenu.initMainMenu(screen)
 
     # Final init
     running = True
     bg_color = (255, 255, 255)
     clock = pygame.time.Clock()
-    utils.current_menu = "main"
 
     while running:
         screen.fill(bg_color)
@@ -28,25 +41,27 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     if utils.current_menu == "main":
                         running = False  # Quit from main menu
-                    elif utils.current_menu == "gameSelect" or utils.current_menu == "login":
+                    elif utils.current_menu == "gameSelect":
                         # Go back to main menu
+                        mainMenu.initMainMenu(screen)
                         utils.current_menu = "main"
-                    elif utils.current_menu == "gameOver":
-                        utils.current_menu = "gameSelect"
 
         # Draw text
-        if utils.current_menu == "main":
-            mainMenu.initMainMenu(screen)
-        elif utils.current_menu == "gameSelect":
-            gameSelect.initSelectMenu(screen)
-        elif utils.current_menu == "login":
-            login.initLoginMenu(screen)
-        elif utils.current_menu == "gameOver":
-            gameOver.initGameOverMenu(screen)
+        if utils.next_menu != utils.current_menu:
+            if utils.next_menu == "main":
+                mainMenu.initMainMenu(screen)
+            elif utils.next_menu == "gameSelect":
+                gameSelect.initSelectMenu(screen)
+            elif utils.next_menu == "login":
+                login.initLoginMenu(screen)
 
-        pygame_widgets.update(events)
-        pygame.display.flip()
-        clock.tick(60)
+        if login.loggingIn:
+            print("test")
+            pygame.display.flip()
+        else:
+            pygame_widgets.update(events)
+            pygame.display.flip()
+            clock.tick(60)
     pygame.quit()
 
 if __name__ == '__main__':

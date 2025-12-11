@@ -2,6 +2,7 @@ import pygame
 
 current_menu_objects = []
 current_menu = None
+next_menu = None
 previous_game = None
 previous_winner = None # previous game winner
 
@@ -10,6 +11,7 @@ def getScreenDims():
     if not pygame.get_init():
         pygame.init()
     global current_menu
+    global next_menu
     REF_DIMS = (1000, 800)  # Reference width, reference height
     info = pygame.display.Info()
     return {
@@ -41,8 +43,8 @@ def register_widget(widget):
 
 #method to switch between menus
 def switchMenus(menu):
-    global current_menu
-    current_menu = menu
+    global next_menu
+    next_menu = menu
 
 def setPreviousGame(game):
     global previous_game
