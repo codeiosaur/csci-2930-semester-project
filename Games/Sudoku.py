@@ -2,12 +2,18 @@ from Games.BaseGame import BaseGame as Game, pygame
 from Menus.utils import draw_text as drawText, setPreviousWinner as setWinner
 import random
 
+
+
 class Sudoku(Game):
     class Cell:
         def __init__(self):
             self.playerNumber = -1 # what number did the player write
             self.correctNumber = -1
             self.correct = None
+            self.clickable = True # can the player change it?
+
+        def __repr__(self):
+            return str(self.correctNumber)
 
     def __init__(self, screen):
         super().__init__(self)
@@ -31,16 +37,26 @@ class Sudoku(Game):
                 for r in self.shuffleRow(range(self.SUBGRID_SIZE))]
         cols = [g * self.SUBGRID_SIZE + c for g in self.shuffleRow(range(self.SUBGRID_SIZE))
                 for c in self.shuffleRow(range(self.SUBGRID_SIZE))]
-        nums = self.shuffleRow(range(1, self.SUBGRID_SIZE + 1))
+        nums = self.shuffleRow(range(1, self.BOARD_SIZE + 1))
 
-        # build the board
-        board = [[nums[self.setNumPattern(r, c)] for c in cols] for r in rows]
+        # initial base pattern method
+        for r in rows:
+            for c in cols:
+                board[r][c].correctNumber = nums[self.setNumPattern(r, c)]
+                board[r][c].playerNumber = board[r][c].correctNumber
+                board[r][c].clickable = False
         for row in board:
             print(row)
+
+        # Randomly switch around some of the numbers
+        row1, row2 = random.randint(1, self.BOARD_SIZE)
+        col1, col2 = random.randint(1, self.BOARD_SIZE)
+
+
         return board
 
     def setup(self):
-        pass
+        board = self.generateSudoku()
 
     def on_event(self, event):
         pass
