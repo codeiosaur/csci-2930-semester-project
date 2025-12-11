@@ -13,6 +13,9 @@ def drawMenuText(screen):
 def login(username, password):
     pass
 
+def createAccount(username,password):
+    pass
+
 def initLoginMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
@@ -28,16 +31,28 @@ def initLoginMenu(screen):
                           fontSize=50, font=text_font,
                           borderThickness=2, borderColour=(50,50,50))
 
-    settingsButton = Button(
-        screen, 425, 480, 150, 60, text='Settings', font= text_font,
+    passwordBox = TextBox(screen, 375, 300, 250, 80, placeholderText="Password:",
+                          fontSize=50, font=text_font,
+                          borderThickness=2, borderColour=(50, 50, 50))
+
+    loginButton = Button(
+        screen, 500, 480, 150, 60, text='Log in', font= text_font,
         fontSize=50, margin=20,
         inactiveColour=(150, 150, 150),
         hoverColour=(100,100,100),
         pressedColour=(180, 180, 180),
-        onClick=lambda: login(usernameBox.getText(),"test")
-    )
-    buttons = [ settingsButton]
-    textObjects = [usernameBox]
+        onClick=lambda: login(usernameBox.getText(),passwordBox.getText))
+
+    createAccountButton = Button(
+        screen, 350, 480, 150, 60, text='Create account', font=text_font,
+        fontSize=50, margin=20,
+        inactiveColour=(150, 150, 150),
+        hoverColour=(100, 100, 100),
+        pressedColour=(180, 180, 180),
+        onClick=lambda: createAccount(usernameBox.getText(), passwordBox.getText))
+
+    buttons = [ loginButton, createAccountButton]
+    textObjects = [usernameBox,passwordBox]
     menuObjects = buttons + textObjects
 
     # Object resizing (only done once - no future resizing)
