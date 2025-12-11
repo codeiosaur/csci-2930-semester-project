@@ -8,6 +8,8 @@ class BaseGame(ABC):
         self.screenInfo = getScreenDims()
         self.running = False
         self.clock = pygame.time.Clock()
+        self.SCREEN_HEIGHT = self.screenInfo["height"]
+        self.SCREEN_WIDTH = self.screenInfo["width"]
 
     def run(self):
         self.running = True
