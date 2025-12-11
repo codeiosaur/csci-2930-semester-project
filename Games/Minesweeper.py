@@ -27,3 +27,14 @@ class Minesweeper(Game):
             self.flags = [] # Which mines have been flagged by the player?
             self.clicked = [] # what squares did the player click on?
 
+        def on_event(self, event):
+            pass
+
+        def on_key(self, keys):
+            pass
+
+        def update(self):
+            pass
+
+        def draw(self):
+            pass
