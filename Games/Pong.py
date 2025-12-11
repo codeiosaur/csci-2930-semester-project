@@ -2,6 +2,9 @@ from Games.BaseGame import BaseGame as Game, pygame
 from Menus.utils import draw_text as drawText, setPreviousWinner as setWinner
 import random
 
+# Used Claude Sonnet for debugging, but 90% of the code is mine (Alex's) own.
+# The 10% that isn't is credited as such below.
+
 class Pong(Game):
     def __init__(self, screen):
         super().__init__(screen)
@@ -123,10 +126,10 @@ class Pong(Game):
                     self.ballSpeed[0] = 3 * self.BALL_BASE_SPEED
                 else:
                     self.ballSpeed[0] = 3 * -self.BALL_BASE_SPEED
-            # Change angle based on hit position
+            # Change angle based on hit position and momentum.
+            # Code written by Claude.
             ballHitPos = (self.ball.centery - self.paddle1.top) / self.paddle1.height
-            self.ballSpeed[1] = (int((ballHitPos - 0.5) * 1.2 * self.BALL_BASE_SPEED))
-            # paddle momentum
+            self.ballSpeed[1] = (int((ballHitPos - 0.5) * 2.4 * self.BALL_BASE_SPEED))
             self.ballSpeed[1] += int(self.paddleVelocity[0] * 0.3)
 
         elif self.ball.colliderect(self.paddle2) and self.ballSpeed[0] > 0:
@@ -142,11 +145,11 @@ class Pong(Game):
                     self.ballSpeed[0] = 3 * self.BALL_BASE_SPEED
                 else:
                     self.ballSpeed[0] = 3 * -self.BALL_BASE_SPEED
-            # Change angle based on hit position
+            # Change angle based on hit position and momentum.
+            # Code written by Claude.
             ballHitPos = (self.ball.centery - self.paddle2.top) / self.paddle2.height
             self.ballSpeed[1] = (int((ballHitPos - 0.5) * 2.4 * self.BALL_BASE_SPEED)
                                  + random.uniform(-0.5, 0.5))
-            # paddle momentum
             self.ballSpeed[1] += int(self.paddleVelocity[1] * 0.3)
 
         # Anti-out of bounds paddle collision logic
