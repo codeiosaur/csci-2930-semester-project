@@ -18,6 +18,10 @@ def startMinesweeper(screen):
     utils.setPreviousGame("Minesweeper")
     utils.switchMenus("gameOver")
 
+def startSudoku(screen):
+    from Games import Sudoku
+    Sudoku.Sudoku(screen)
+
 def initSelectMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
@@ -46,7 +50,16 @@ def initSelectMenu(screen):
         onClick=lambda: startMinesweeper(screen)
     )
 
-    buttons = [pongButton, mineButton]
+    sudokuButton = Button(
+        screen, 525, 280, 150, 60, text='Sudoku', font=text_font,
+        textColor=(0, 0, 0), fontSize=50, margin=20,
+        inactiveColour=(0, 200, 0),
+        hoverColour=(0, 150, 0),
+        pressedColour=(0, 220, 0),
+        onClick=lambda: startSudoku(screen)
+    )
+
+    buttons = [pongButton, mineButton, sudokuButton]
 
     for button in buttons:
         button.setX(int(button.getX() * screenInfo["scaleX"]))
