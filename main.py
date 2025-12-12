@@ -2,7 +2,7 @@ import pygame
 import pygame_widgets
 from pygame import MOUSEBUTTONDOWN
 
-from Menus import mainMenu, gameSelect, login, gameOver
+from Menus import mainMenu, gameSelect, login, gameOver, gameStart
 from Menus import utils as utils
 
 def main():
@@ -53,6 +53,8 @@ def main():
             login.drawMenuText(screen)
         elif utils.current_menu == "gameOver":
             gameOver.drawMenuText(screen)
+        elif utils.current_menu == "gameStart":
+            gameStart.drawMenuText(screen)
 
         if utils.next_menu != utils.current_menu:
             if utils.next_menu == "main":
@@ -61,6 +63,10 @@ def main():
                 gameSelect.initSelectMenu(screen)
             elif utils.next_menu == "login":
                 login.initLoginMenu(screen)
+            elif utils.next_menu == "gameOver":
+                gameOver.initGameOverMenu(screen)
+            elif utils.next_menu == "gameStart":
+                gameStart.initGameStart(screen)
             utils.current_menu = utils.next_menu
 
 
