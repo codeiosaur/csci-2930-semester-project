@@ -5,8 +5,6 @@ from pygame import MOUSEBUTTONDOWN
 from Menus import mainMenu, gameSelect, login
 from Menus import utils as utils
 
-
-
 def main():
     pygame.init()
 
