@@ -101,16 +101,17 @@ class Sudoku(Game):
     def createPuzzle(self):
         cellPosQueue = [(r, c) for r in range(self.SUBGRID_SIZE) for c in range(self.BOARD_SIZE)]
         random.shuffle(cellPosQueue)
+
+        for row in self.board:
+            print(row)
+        print("-----")
         removedCells = 0
         while removedCells < 9:
             currPos = cellPosQueue.pop(0)  # current cell position
             currCell = self.board[currPos[0]][currPos[1]]
             currCell.playerNumber = -1  # hide it
-            print(f"removing cell {currPos}")
-            removalLegal = SudokuSolver.lastFreeCell(currCell, self.board,
-                                                     self.SUBGRID_SIZE, self.BOARD_SIZE)
+            removalLegal = (SudokuSolver.lastRemCell(self.board, self.SUBGRID_SIZE, self.BOARD_SIZE))
             if removalLegal:
-                print("Success")
                 currCell.clickable = True  # make it so player can change it
                 removedCells += 1
             else:
@@ -118,8 +119,8 @@ class Sudoku(Game):
                 cellPosQueue.append(currPos)
                 currCell.playerNumber = currCell.correctNumber
 
-            for row in self.board:
-                print(row)
+        for row in self.board:
+            print(row)
 
 
 
@@ -150,17 +151,17 @@ class SudokuSolver:
                     emptyCells.append([row, col, False])
         return emptyCells
 
-    # Based on the "last free cell" method (https://sudoku.com/sudoku-rules/last-free-cell/),
-    # Looks for the numbers that can be filled in based on the other #s in the row/col/box.
-    # Returns True if exactly 1 solution can be reached without guessing.
-    # A False result does not mean the sudoku was invalid; it might mean we need other methods also.
+    # Based on the "last remaining cell" method (https://sudoku.com/sudoku-rules/last-remaining-cell/).
+    # When trying to put a given number in a box, if more than 1 space in a box is blank,
+    # but all but 1 space are blocked by numbers in different rows/cols, the 1 space must be filled
+    # with that number. Returns True if all empty cells can be filled in with this method.
+    # Also known as "naked singles" method.
     @staticmethod
-    def lastFreeCell(cell, board, subgridSize, boardSize):
-
+    def lastRemCell(board, subgridSize, boardSize):
         # Look for all empty cells on the board.
         emptyCells = SudokuSolver.findEmptyCells(board, subgridSize, boardSize)
+        # Can the empty cells be solved with the "last remaining cell" method?
         cellsRemoved = 1
-        # Can the empty cells be solved with the "last free cell" method?
         while cellsRemoved != 0:
             cellsRemoved = 0
             for cell in emptyCells:
@@ -168,38 +169,40 @@ class SudokuSolver:
                 subGrid = [cell[0] // subgridSize, cell[1] // subgridSize]
 
                 # board is always square so range should always be the same.
-                numsNotFound = [i for i in range(1, boardSize + 1)]
-
-                # Are there 8 other visible cells in the same row?
-                # If so, only 1 number can fit in cellPos - the one not among the other 8.
-                # (A cell where playerNumber is -1 is blank and therefore not visible.)
+                numsUsed = set()
+                # First check for numbers eliminated due to being in the same row.
                 for col in range(boardSize):
-                    if board[cell[0]][col].playerNumber != -1:
-                        numsNotFound.remove(board[cell[0]][col].playerNumber)
-                #print(f"Nums not found (row): {numsNotFound}")
-                if len(numsNotFound) == 1:
-                    # Only 1 number not found - cell must be this number.
+                    if (board[cell[0]][col].playerNumber != -1):
+                        numsUsed.add(board[cell[0]][col].playerNumber)
+                if (len(numsUsed) == boardSize - 1
+                    and board[cell[0]][cell[1]].correctNumber not in numsUsed):
                     emptyCells.remove(cell); cellsRemoved += 1
                     continue
 
-                # Are there 8 other viewable cells in the same column?
-                numsNotFound = [i for i in range(1, boardSize + 1)]
+                # Check for numbers in the same column.
                 for row in range(boardSize):
                     if board[row][cell[1]].playerNumber != -1:
-                        numsNotFound.remove(board[row][cell[1]].playerNumber)
-                #print(f"Nums not found (col): {numsNotFound}")
-                if len(numsNotFound) == 1:
+                        numsUsed.add(board[row][cell[1]].playerNumber)
+                if (len(numsUsed) == boardSize - 1
+                    and board[cell[0]][cell[1]].correctNumber not in numsUsed):
                     emptyCells.remove(cell); cellsRemoved += 1
                     continue
 
-                # Are there 8 other viewable cells in the same box/subgrid?
-                numsNotFound = [i for i in range(1, boardSize + 1)]
+                # Check for numbers in the same box.
                 for row in range(subGrid[0] * subgridSize, (subGrid[0] + 1) * subgridSize):
                     for col in range(subGrid[1] * subgridSize, (subGrid[1] + 1) * subgridSize):
                         if board[row][col].playerNumber != -1:
-                            numsNotFound.remove(board[row][col].playerNumber)
-                print(f"Nums not found (box): {numsNotFound}")
-                if len(numsNotFound) == 1:
+                            numsUsed.add(board[row][col].playerNumber)
+                if (len(numsUsed) == 1
+                        and board[cell[0]][cell[1]].correctNumber not in numsUsed):
                     emptyCells.remove(cell); cellsRemoved += 1
 
-        return len(emptyCells) == 0
+
+    @staticmethod
+    def hiddenSingles(board, subgridSize, boardSize):
+
+
+
+
+
+
