@@ -2,12 +2,14 @@ import pygame
 from pygame_widgets.button import Button
 from pygame_widgets.textbox import TextBox
 import Menus.utils as utils
+import Data.DatabaseManager as db
 
 loggingIn = False
 
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
-    utils.draw_text(screen, "Login or Sign up", text_font, (0, 0, 0), 500, 100)
+    utils.draw_text(screen, "Login or Create account", text_font, (0, 0, 0), 400, 100)
+    print("a")
 
 
 def login(username, password):
@@ -19,9 +21,10 @@ def createAccount(username,password):
 def initLoginMenu(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
-    drawMenuText(screen)
 
-    utils.current_menu = "login"
+    drawMenuText(screen)
+    utils.switchMenus("login")
+
     login.loggingIn = True
     # Other initializations (non-button)
     text_font = pygame.font.SysFont("comicsans", 30)
