@@ -7,13 +7,14 @@ from copy import deepcopy
 
 class Sudoku(Game):
     class Cell:
-        def __init__(self, row, col):
+        def __init__(self, row, col, boardsize):
             self.playerNumber = -1 # what number did the player write?
             self.correctNumber = -1
             self.correct = None
             self.clickable = True # can the player change it?
             self.row = row
             self.col = col
+            self.candidates = set(range(1, boardsize + 1))
 
         def __repr__(self):
             #return str(f"Cell at {self.row},{self.col}: {self.correctNumber}")
@@ -110,7 +111,7 @@ class Sudoku(Game):
             currPos = cellPosQueue.pop(0)  # current cell position
             currCell = self.board[currPos[0]][currPos[1]]
             currCell.playerNumber = -1  # hide it
-            removalLegal = (SudokuSolver.lastRemCell(self.board, self.SUBGRID_SIZE, self.BOARD_SIZE))
+            removalLegal = (SudokuSolver.solvePuzzle(deepcopy(self.board), self.SUBGRID_SIZE, self.BOARD_SIZE))
             if removalLegal:
                 currCell.clickable = True  # make it so player can change it
                 removedCells += 1
@@ -143,13 +144,51 @@ class Sudoku(Game):
 # Static class used for storing various sudoku solving functions
 class SudokuSolver:
     @staticmethod
-    def findEmptyCells(board, subgridSize, boardSize):
+    def findEmptyCells(board, boardSize):
         emptyCells = []
         for row in range(boardSize):
             for col in range(boardSize):
                 if board[row][col].playerNumber == -1:
-                    emptyCells.append([row, col, False])
+                    emptyCells.append([row, col])
         return emptyCells
+
+
+    # Tries to solve the puzzle.
+    @staticmethod
+    def solvePuzzle(board, subgridSize, boardSize):
+        emptyCells = SudokuSolver.findEmptyCells(board, subgridSize)
+        progress = False
+        # Last remaining cell algorithm
+        for cell in emptyCells:
+            # Figure out in which subgrid the cell is in. ([0, 0] is the top-left subgrid.)
+            subGrid = [cell[0] // subgridSize, cell[1] // subgridSize]
+
+            # board is always square so range should always be the same.
+            numsUsed = set()
+
+            # First check for numbers eliminated due to being in the same row.
+            for col in range(boardSize):
+                if (board[cell[0]][col].playerNumber != -1):
+                    numsUsed.add(board[cell[0]][col].playerNumber)
+
+            # Check for numbers in the same column.
+            for row in range(boardSize):
+                if board[row][cell[1]].playerNumber != -1:
+                    numsUsed.add(board[row][cell[1]].playerNumber)
+
+            # Check for numbers in the same box.
+            for row in range(subGrid[0] * subgridSize, (subGrid[0] + 1) * subgridSize):
+                for col in range(subGrid[1] * subgridSize, (subGrid[1] + 1) * subgridSize):
+                    if board[row][col].playerNumber != -1:
+                        numsUsed.add(board[row][col].playerNumber)
+
+            if (len(numsUsed) == 1
+                    and board[cell[0]][cell[1]].correctNumber not in numsUsed):
+                emptyCells.remove(cell)
+                board[cell[0]][cell[1]].playerNumber = board[cell[0]][cell[1]].correctNumber
+
+
+
 
     # Based on the "last remaining cell" method (https://sudoku.com/sudoku-rules/last-remaining-cell/).
     # When trying to put a given number in a box, if more than 1 space in a box is blank,
@@ -159,7 +198,7 @@ class SudokuSolver:
     @staticmethod
     def lastRemCell(board, subgridSize, boardSize):
         # Look for all empty cells on the board.
-        emptyCells = SudokuSolver.findEmptyCells(board, subgridSize, boardSize)
+        emptyCells = SudokuSolver.findEmptyCells(board, subgridSize)
         # Can the empty cells be solved with the "last remaining cell" method?
         cellsRemoved = 1
         while cellsRemoved != 0:
@@ -197,9 +236,11 @@ class SudokuSolver:
                         and board[cell[0]][cell[1]].correctNumber not in numsUsed):
                     emptyCells.remove(cell); cellsRemoved += 1
 
-
     @staticmethod
-    def hiddenSingles(board, subgridSize, boardSize):
+    def solveLRC(board, subgridSize, boardSize):
+        progress = True
+        while progress:
+            pass
 
 
 
