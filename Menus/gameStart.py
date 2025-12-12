@@ -40,12 +40,12 @@ def initGameStart(screen):
     screen.fill((255, 255, 255))
     drawMenuText(screen)
 
-    utils.switchMenus("gameSelect")
+    utils.switchMenus("gameStart")
     text_font = pygame.font.SysFont("comicsans", 30)
 
     # Buttons init
     startButton = Button(
-        screen, 425, 480, 150, 60, text='Start Game', font=text_font,
+        screen, 375, 250, 250, 150, text='Start Game', font=text_font,
         fontSize=50, margin=20,
         inactiveColour=(150, 150, 150),
         hoverColour=(100, 100, 100),
