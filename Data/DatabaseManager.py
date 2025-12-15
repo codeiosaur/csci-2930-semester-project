@@ -27,7 +27,7 @@ class DatabaseManager:
     def updateUsername(self, username, userID):
         cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userID};""")
 
-    def updateUserPassword(self, password, userID, hashtype): #Fix
+    def updateUserPassword(self, password, userID): #Fix
         password = hash(password)
         cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userID};""")
 
