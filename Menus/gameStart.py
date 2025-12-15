@@ -47,7 +47,7 @@ def initGameStart(screen):
     startButton = Button(
         screen, 375, 250, 250, 150, text='Start Game', font=text_font,
         fontSize=50, margin=20,
-        inactiveColour=(150, 150, 150),
+        inactiveColour=(1, 150, 150),
         hoverColour=(100, 100, 100),
         pressedColour=(180, 180, 180),
         onClick=lambda: startGame(screen)
