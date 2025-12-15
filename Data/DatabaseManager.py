@@ -53,11 +53,11 @@ class DatabaseManager:
             if timescore == None:
                 high = cursor.execute(f"""SELECT HighestPoint FROM GameData WHERE (UserID = {userId} AND Game = {game});""")
                 if score < high:
-                    high = score
+                    score = high
             else:
                 high = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE (UserID = {userId} AND Game = {game});""")
-                if timescore > high:
-                    high = timescore
+                if timescore < high:
+                    timescore = high
             time += cursor.execute(f"""SELECT TotalTime FROM GameData WHERE UserID = {userId} AND Game = {game};""")
             played = cursor.execute(f"""SELECT TimesPlayed FROM GameData WHERE UserID = {userId} AND Game = {game};""") + 1
             cursor.execute(f"""UPDATE GameData SET TimesPlayed = {played}, TotalTime = {time}, HighestPoint = {score}, HighestTime = {timescore} WHERE UserID = {userId} AND Game = {game};""")
