@@ -9,7 +9,7 @@ from Data import DatabaseManager
 
 def main():
     pygame.init()
-    DatabaseManager.init()
+    DatabaseManager()
 
     # Setting screen constants
     screenInfo = utils.getScreenDims()
