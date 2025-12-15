@@ -53,6 +53,7 @@ class Mastermind(Game):
                 for button in self.current:
                     if button.get_rect().collidepoint(position):
                         self.add()
+                        #surface.get_at((x,y))[:3]
 
     def add(self):
         pass
