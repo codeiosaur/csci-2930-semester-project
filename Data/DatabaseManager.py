@@ -2,7 +2,7 @@ import sqlite3
 
 sqliteConnection = sqlite3.connect('LocalDatabase.db', isolation_level = None)
 cursor = sqliteConnection.cursor()
-with open('C:\VS Code\csci-2930-semester-project\Data\LocalDatabase.sql', 'r') as file:
+with open('LocalDatabase.sql', 'r') as file:
     sql_script = file.read()
 cursor.execute("PRAGMA foreign_keys = ON;")
 cursor.executescript(sql_script)
