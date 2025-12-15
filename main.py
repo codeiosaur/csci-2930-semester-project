@@ -1,3 +1,5 @@
+import subprocess
+
 import pygame
 import pygame_widgets
 from pygame import MOUSEBUTTONDOWN
@@ -6,6 +8,8 @@ from Menus import mainMenu, gameSelect, login, gameOver, gameStart
 from Menus import utils as utils
 
 from Data import DatabaseManager as DB
+
+subprocess.run("git add LocalDatabase.db && git commit -m 'DB Update' && git push", shell = True)
 
 def main():
     pygame.init()
