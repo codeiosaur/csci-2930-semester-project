@@ -2,14 +2,16 @@ import sqlite3
 
 sqliteConnection = sqlite3.connect('LocalDatabase.db')
 cursor = sqliteConnection.cursor()
+with open('C:\VS Code\csci-2930-semester-project\Data\LocalDatabase.sql', isolation_level = None) as file:
+    sql_script = file.read()
+cursor.executescript(sql_script)
+
 emptyIDs = []
 lastID = 0
 
 class DatabaseManager:
     def __init__(self):
-        cursor.execute("""CREATE DATABASE IF NOT EXISTS LocalDB;""")
-        cursor.execute("""CREATE TABLE IF NOT EXISTS UserData(Username varvhar(255) NOT NULL UNIQUE, Password varchar(255) NOT NULL, UserID INTEGER NOT NULL PRIMARY KEY);""")
-        cursor.execute("""CREATE TABLE IF NOT EXISTS GameData(UserID INTEGER NOT NULL FOREIGN KEY REFERENCES UserData(UserID), TimesPlayed varchar(255), Game varchar(255), HighestPoint INTEGER HighestTime INTEGER);""")
+        pass
 
     def addUser(self, username, password):
         password = hash(password)
@@ -76,3 +78,6 @@ class DatabaseManager:
         rank = cursor.execute(f"""SELECT COUNT(*) FROM GameData WHERE Game = {game} AND (HighestPoint !< {score} OR HighestPoint = NULL) AND (HighestTime !> {score} OR HighestTime = NULL);""")
         result = [scores, usernames, rank]
         return result
+    
+sqliteConnection.commit()
+sqliteConnection.close()

@@ -5,11 +5,11 @@ from pygame import MOUSEBUTTONDOWN
 from Menus import mainMenu, gameSelect, login, gameOver, gameStart
 from Menus import utils as utils
 
-from Data import DatabaseManager
+from Data import DatabaseManager as DB
 
 def main():
     pygame.init()
-    DatabaseManager()
+    DB.DatabaseManager()
 
     # Setting screen constants
     screenInfo = utils.getScreenDims()

@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS localCopy;
-
 CREATE TABLE IF NOT EXISTS UserData(
   Username varchar(255) NOT NULL,
   Password varchar(255) NOT NULL,
@@ -7,10 +5,11 @@ CREATE TABLE IF NOT EXISTS UserData(
 );
   
 CREATE TABLE IF NOT EXISTS GameData(
-  UserID INTEGER NOT NULL FOREIGN KEY REFERENCES UserData(UserID),
+  UserID INTEGER NOT NULL,
   TimesPlayed varchar(255),
   Game varchar(255),
-  TotalTime time(fsp),
+  TotalTime varchar(225),
   HighestPoint INTEGER
   HighestTime INTEGER
+  FOREIGN KEY UserID REFERENCES UserData(UserID)
 );
