@@ -40,7 +40,7 @@ class DatabaseManager:
     def updateUsername(self, username, userID):
         cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userID};""")
 
-    def updateUserPassword(self, password, userID): #Fix
+    def updateUserPassword(self, password, userID):
         password = hash(password)
         cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userID};""")
 
@@ -48,7 +48,7 @@ class DatabaseManager:
         cursor.execute(f"""DELETE FROM UserData WHERE UserId = {userID};""")
         emptyIDs.append[userID]
 
-    def usernameExists (self, name): #Fix
+    def usernameExists (self, name):
         result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT Username FROM UserData WHERE UserData.Username = {name});""")
         return result
 
