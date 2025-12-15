@@ -1,11 +1,24 @@
 import sqlite3
+import os
 
 sqliteConnection = sqlite3.connect('LocalDatabase.db', isolation_level = None)
 cursor = sqliteConnection.cursor()
-with open('LocalDatabase.sql', 'r') as file:
-    sql_script = file.read()
-cursor.execute("PRAGMA foreign_keys = ON;")
-cursor.executescript(sql_script)
+sql = """CREATE TABLE IF NOT EXISTS UserData(
+  Username TEXT NOT NULL,
+  Password TEXT NOT NULL,
+  UserID INTEGER NOT NULL PRIMARY KEY
+);
+  
+CREATE TABLE IF NOT EXISTS GameData(
+  UserID INTEGER NOT NULL,
+  TimesPlayed INTEGER,
+  Game TEXT,
+  TotalTime INTEGER,
+  HighestPoint INTEGER,
+  HighestTime INTEGER,
+  FOREIGN KEY (UserID) REFERENCES UserData(UserID)
+);"""
+cursor.executescript(sql)
 
 emptyIDs = []
 lastID = 0

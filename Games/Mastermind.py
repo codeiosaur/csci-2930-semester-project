@@ -37,13 +37,31 @@ class Mastermind(Game):
             self.plays.append(playRow)
         for column in range(8):
             self.current.append(pygame.draw.circle(screen, white, [5 + (self.SCREEN_WIDTH / 2) + column * (self.SCREEN_WIDTH/7), self.SCREEN_HEIGHT - 5], 2.5))
-        submit = pygame.Rect(0, self.SCREEN_HEIGHT - 15, self.SCREEN_WIDTH / 4)
+        self.submit = pygame.Rect(0, self.SCREEN_HEIGHT - 15, self.SCREEN_WIDTH / 4)
         drawText(screen, "Submit", ("menlo", 45), black, 0, self.SCREEN_HEIGHT - 15)
 
     def on_event(self):
         while True:
             if pygame.mouse.get_pressed():
-                position = 
+                position = pygame.mouse.get_pos()
+                if self.submit.get_rect().collidepoint(position):
+                    self.submit()
+                for row in self.plays:
+                    for button in self.plays:
+                        if button.get_rect().collidepoint(position):
+                            self.remove()
+                for button in self.current:
+                    if button.get_rect().collidepoint(position):
+                        self.add()
+
+    def add(self):
+        pass
+
+    def remove(self):
+        pass
+
+    def submit(self):
+        pass
 
     def on_key(self):
         pass
