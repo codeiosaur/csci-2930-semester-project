@@ -1,24 +1,24 @@
 import sqlite3
-sqliteConnection = sqlite3.connect('DatabaseLocalCopy.db')
+
+sqliteConnection = sqlite3.connect('LocalDatabase.db')
 cursor = sqliteConnection.cursor()
+emptyIDs = []
+lastID = 0
 
 class DatabaseManager:
-    
     def __init__(self):
-        self.emptyIDs = []
-        self.lastID = 0
         cursor.execute("""CREATE DATABASE IF NOT EXISTS LocalDB;""")
         cursor.execute("""CREATE TABLE IF NOT EXISTS UserData(Username varvhar(255) NOT NULL UNIQUE, Password varchar(255) NOT NULL, UserID INTEGER NOT NULL PRIMARY KEY);""")
         cursor.execute("""CREATE TABLE IF NOT EXISTS GameData(UserID INTEGER NOT NULL FOREIGN KEY REFERENCES UserData(UserID), TimesPlayed varchar(255), Game varchar(255), HighestPoint INTEGER HighestTime INTEGER);""")
 
     def addUser(self, username, password):
         password = hash(password)
-        if self.emptyIDs.length() == 0:
-            userID = self.lastID
-            self.lastID += 1
+        if emptyIDs.length() == 0:
+            userID = lastID
+            lastID += 1
         else:
-            userID = self.emptyIDs[0]
-            self.emptyIDs.pop(0)
+            userID = emptyIDs[0]
+            emptyIDs.pop(0)
         cursor.execute(f"""INSTERT INTO UserData ({username}, {password}, {userID});""")
 
     def updateUsername(self, username, userID):
@@ -30,7 +30,7 @@ class DatabaseManager:
 
     def deleteUser(self, userID):
         cursor.execute(f"""DELETE FROM UserData WHERE UserId = {userID};""")
-        self.emptyIDs.append[userID]
+        emptyIDs.append[userID]
 
     def usernameExists (self, name): #Fix
         result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT Username FROM UserData WHERE UserData.Username = {name});""")
