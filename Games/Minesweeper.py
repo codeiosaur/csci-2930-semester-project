@@ -1,6 +1,10 @@
 from Games.BaseGame import BaseGame as Game, pygame
-from Menus.utils import draw_text as drawText, scale_rect as scaleRect, setPreviousWinner as setWinner
+from Menus.utils import draw_text as drawText, scale_rect as scaleRect, switchMenus, getScreenDims, register_widget
+from Menus import utils
+from Menus.gameSelect import startGame
+from pygame_widgets.button import Button
 import random
+from Data import DatabaseManager as DB
 import math
 
 class Minesweeper(Game):
@@ -27,8 +31,10 @@ class Minesweeper(Game):
 
 
         def reveal(self):
+            if not self.game.started:
+                self.game.timer_start()
             self.count_adjacent()
-            if not (self.revealed or self.flagged):
+            if not (self.revealed or self.flagged or self.game.locked):
                 if self.is_mine:
                     self.revealed = True
                     self.game.lose()
@@ -55,10 +61,11 @@ class Minesweeper(Game):
 
 
         def flag(self):
-            if self.flagged:
-                self.flagged = False
-            else:
-                self.flagged = True
+            if not self.game.locked:
+                if self.flagged:
+                    self.flagged = False
+                else:
+                    self.flagged = True
 
 
     def __init__(self, screen):
@@ -83,8 +90,15 @@ class Minesweeper(Game):
 
     def setup(self):
         self.font = pygame.font.SysFont("arial", 20)
+        self.font2 = pygame.font.SysFont("arial", 40)
         self.board = [[Minesweeper.Cell(i,j,self) for j in range(self.BOARD_COLS)] for i in range(self.BOARD_ROWS)]
+        self.locked = False
+        self.started = False
+        self.start_ticks = 9999999999
+        self.true_ticks = 0
         self.placeMines()
+        self.won = False
+
 
 
     def revealAll(self):
@@ -94,10 +108,14 @@ class Minesweeper(Game):
 
     def lose(self):
         self.revealMines()
+        self.locked = True
+        self.timer_stop()
 
 
     def win(self):
-        pass
+        self.locked = True
+        self.won = True
+        self.timer_stop()
 
     def revealMines(self):
         for i in range(self.BOARD_ROWS):
@@ -114,9 +132,7 @@ class Minesweeper(Game):
                 if self.board[i][j].revealed:
                     revealed += 1
         if revealed == self.BOARD_ROWS * self.BOARD_COLS - self.TOTAL_MINES:
-            return True
-        else:
-            return False
+            self.win()
 
     def on_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -132,6 +148,11 @@ class Minesweeper(Game):
                             cell.reveal()
                         if event.button == 3:
                             cell.flag()
+            if(self.locked == True):
+                button_rect = scaleRect(425, 540, 150, 60)
+                if self.isIn(button_rect,pos):
+                    self.conclude()
+        self.checkWin()
 
     def on_key(self, key):
         pass
@@ -143,10 +164,43 @@ class Minesweeper(Game):
         test = object.collidepoint(position)
         return test
 
+    def timer_start(self):
+        self.started = True
+        self.start_ticks = pygame.time.get_ticks()
+
+    def timer_stop(self):
+        self.started = False
+
+    def timer(self):
+        ticks = pygame.time.get_ticks()
+        if self.started == True:
+            self.true_ticks = ticks - self.start_ticks
+        seconds = int((self.true_ticks) / 1000 % 60)
+        minutes = int((self.true_ticks) / 60000)
+        drawText(self.screen, f"{minutes:02d}:{seconds:02d}", self.font2, (0,0,0), 500, 100)
+
+    def conclude(self):
+        if self.win == True and utils.userId is not None:
+            db = DB.DatabaseManager()
+            db.endGame(False, self.true_ticks/1000, utils.userId,"Minesweeper", self.true_ticks/1000)
+        self.running = False
+        startGame("Minesweeper")
+
+
+    def continueButton(self):
+
+        if self.locked == True:
+            button_rect = scaleRect(425, 540, 150, 60)
+            pygame.draw.rect(self.screen, (0, 150, 0), button_rect)
+            drawText(self.screen,"Continue", self.font2, Minesweeper.CELL_COLORS[7], 500, 570)
+
     def draw(self):
+        self.screen.fill((255,255,255))
+        self.timer()
         for i in range(self.BOARD_ROWS):
             for j in range(self.BOARD_COLS):
                 self.draw_cell(i,j)
+        self.continueButton()
 
     def draw_cell(self, x_pos, y_pos):
         cell = self.board[x_pos][y_pos]
@@ -160,10 +214,12 @@ class Minesweeper(Game):
                 drawText(self.screen,f"{cell.adjacent}",self.font,Minesweeper.CELL_COLORS[cell.adjacent], pix_x+10,pix_y+10)
             if cell.is_mine:
                 pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[3], cell_rect)
-                drawText(self.screen,'*',self.font,Minesweeper.CELL_COLORS[7],pix_x+15,pix_y+15)
+                drawText(self.screen,'*',self.font2,Minesweeper.CELL_COLORS[7],pix_x+15,pix_y+20)
         else:
             pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[8], cell_rect)
             if cell.flagged:
-                drawText(self.screen, '#', self.font, Minesweeper.CELL_COLORS[3], pix_x + 15, pix_y + 15)
+                drawText(self.screen, '#', self.font, Minesweeper.CELL_COLORS[3], pix_x + 14, pix_y + 15)
+            if self.won == True:
+                pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[2], cell_rect)
 
 

@@ -18,8 +18,12 @@ def startPong(screen):
 def startMinesweeper(screen):
     from Games import Minesweeper
     Minesweeper.Minesweeper(screen)
-    utils.setPreviousGame("Minesweeper")
-    utils.switchMenus("gameOver")
+    #utils.setPreviousGame("Minesweeper")
+    #utils.switchMenus("gameOver")
+
+def startMastermind(screen):
+    from Games import Mastermind
+    Mastermind.Mastermind(screen)
 
 def startSudoku(screen):
     from Games import Sudoku
@@ -45,7 +49,7 @@ def initGameStart(screen):
 
     # Buttons init
     startButton = Button(
-        screen, 375, 250, 250, 150, text='Start Game', font=text_font,
+        screen, 375, 460, 250, 100, text='Start Game', font=text_font,
         fontSize=50, margin=20,
         inactiveColour=(1, 150, 150),
         hoverColour=(100, 100, 100),
@@ -53,7 +57,7 @@ def initGameStart(screen):
         onClick=lambda: startGame(screen)
     )
     backButton = Button(
-        screen, 425, 480, 150, 60, text='Back to Game Select', font=text_font,
+        screen, 405, 580, 200, 60, text='Back to Game Select', font=text_font,
         fontSize=50, margin=20,
         inactiveColour=(150, 150, 150),
         hoverColour=(100, 100, 100),

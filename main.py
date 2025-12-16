@@ -18,8 +18,6 @@ def main():
     # Setting screen constants
     screenInfo = utils.getScreenDims()
 
-    print(pygame.font.get_fonts())
-
     # Create the screen.
     # scale_x = scale_y = 1
     # screen = pygame.display.set_mode((1000, 800))

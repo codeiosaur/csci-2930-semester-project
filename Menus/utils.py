@@ -5,6 +5,7 @@ current_menu = None
 next_menu = None
 previous_game = None
 previous_winner = None # previous game winner
+userId = None
 
 # Set global variables regarding the screen resolution.
 def getScreenDims():

@@ -11,12 +11,22 @@ def drawMenuText(screen):
     utils.draw_text(screen, "Login or Create account", text_font, (0, 0, 0), 400, 100)
     print("a")
 
+def exception1():
+    pass
 
 def login(username, password):
-    pass
+    base = db.DatabaseManager()
+    Id = base.getIdFromName(username)
+    if base.checkPassword(password,Id):
+        utils.userId = Id
+    elif username == None or password == None:
+        exception1()
+
 
 def createAccount(username,password):
-    pass
+    base = db.DatabaseManager()
+    if not base.usernameExists(username):
+        base.addUser(username,password)
 
 def initLoginMenu(screen):
     screenInfo = utils.getScreenDims()

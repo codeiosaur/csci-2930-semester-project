@@ -1,5 +1,4 @@
 import sqlite3
-import os
 
 sqliteConnection = sqlite3.connect('LocalDatabase.db', isolation_level = None)
 cursor = sqliteConnection.cursor()
@@ -35,28 +34,31 @@ class DatabaseManager:
         else:
             userID = emptyIDs[0]
             emptyIDs.pop(0)
-        cursor.execute(f"""INSTERT INTO UserData ({username}, {password}, {userID});""")
+        cursor.execute(f"""INSTERT INTO UserData (?, ?, ?);""", (username,), (password,), (userID,))
 
     def updateUsername(self, username, userID):
-        cursor.execute(f"""UPDATE UserData SET Username = {username} WHERE UserId = {userID};""")
+        cursor.execute(f"""UPDATE UserData SET Username = ? WHERE UserId = ?;""", (username,), (userID,))
 
     def updateUserPassword(self, password, userID):
         password = hash(password)
-        cursor.execute(f"""UPDATE UserData SET Password = {password} WHERE UserId = {userID};""")
+        cursor.execute(f"""UPDATE UserData SET Password = ? WHERE UserId = ?;""", (password,), (userID,))
 
     def deleteUser(self, userID):
-        cursor.execute(f"""DELETE FROM UserData WHERE UserId = {userID};""")
+        cursor.execute(f"""DELETE FROM UserData WHERE UserId = ?;""", (userID,))
         emptyIDs.append[userID]
 
-    def usernameExists (self, name):
-        result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT Username FROM UserData WHERE UserData.Username = {name});""")
+    def usernameExists(self, name):
+        result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT Username FROM UserData WHERE UserData.Username = ?);""", (name,))
         return result
+    
+    def getIdFromName(self, username):
+        return cursor.execute(f"""SELECT UserID FROM UserData WHERE Username = ?;""", (username,))
 
     def checkPassword (self, password, userId): #Returns boolean if password is correct
-        return (cursor.execute(f"""SELECT Password FROM UserData WHERE UserData.UserID = {userId};""") == hash(password))
+        return (cursor.execute(f"""SELECT Password FROM UserData WHERE UserData.UserID = ?;""", (userId)) == hash(password))
     
     def endGame(self, point, score, userId, game, time): #Call this function at end of game to update stats
-        first = cursor.execute(f"""SELECT UserID FROM GameData WHERE EXISTS UserID = {userId} AND Game = {game};""")
+        first = cursor.execute(f"""SELECT UserID FROM GameData WHERE EXISTS UserID = ? AND Game = ?;""", (userId,), (game,))
         if point:
             timescore = None
         else:
@@ -64,34 +66,33 @@ class DatabaseManager:
             score = None
         if first:
             if timescore == None:
-                high = cursor.execute(f"""SELECT HighestPoint FROM GameData WHERE (UserID = {userId} AND Game = {game});""")
+                high = cursor.execute(f"""SELECT HighestPoint FROM GameData WHERE (UserID = ? AND Game = ?);""", (userId,), (game,))
                 if score < high:
                     score = high
             else:
-                high = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE (UserID = {userId} AND Game = {game});""")
+                high = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE (UserID = ? AND Game = ?);""", (userId,), (game,))
                 if timescore < high:
                     timescore = high
-            time += cursor.execute(f"""SELECT TotalTime FROM GameData WHERE UserID = {userId} AND Game = {game};""")
-            played = cursor.execute(f"""SELECT TimesPlayed FROM GameData WHERE UserID = {userId} AND Game = {game};""") + 1
-            cursor.execute(f"""UPDATE GameData SET TimesPlayed = {played}, TotalTime = {time}, HighestPoint = {score}, HighestTime = {timescore} WHERE UserID = {userId} AND Game = {game};""")
+            time += cursor.execute(f"""SELECT TotalTime FROM GameData WHERE UserID = ? AND Game = ?;""", (userId,), (game,))
+            played = cursor.execute(f"""SELECT TimesPlayed FROM GameData WHERE UserID = ? AND Game = ?;""", (userId,), (game,)) + 1
+            cursor.execute(f"""UPDATE GameData SET TimesPlayed = ?, TotalTime = ?, HighestPoint = ?, HighestTime = ? WHERE UserID = ? AND Game = ?;""", (played,), (time,), (score,), (timescore,), (userId,), (game,))
         else:
-            cursor.execute(f"""INSERT INTO GameData ({userId}, 1, {game}, {time}, {score}, {timescore});""")
+            cursor.execute(f"""INSERT INTO GameData (?, 1, ?, ?, ?, ?);""", (userId,), (game,), (time,), (score,), (timescore,))
 
     def leaderboard(self, game, userId, point): #Returns a list containing a list of the highest 10 scores and the users score, a list of the corresponding usernames in order, and an integer for the user's rank
         if point:
-            scores = cursor.execute(f"""SELECT TOP 10 HighestPoint FROM GameData WHERE Game = {game} ORDER BY HighestPoint ASC;""")
-            score = cursor.execute(f"""SELECT HighestPoint FROM GameData WHERE UserID = {userId} and Game = {game};""")
+            scores = cursor.execute(f"""SELECT TOP 10 HighestPoint FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC;""", (game,))
+            score = cursor.execute(f"""SELECT HighestPoint FROM GameData WHERE UserID = ? and Game = ?;""", (userId,), (game,))
         else:
-            scores = cursor.execute(f"""SELECT TOP 10 HighestTime FROM GameData WHERE Game = {game} ORDER BY HighestTime DESC;""")
-            score = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE UserID = {userId} and Game = {game};""")
-        usernames = cursor.execute(f"""SELECT TOP 10 UserID FROM GameData WHERE Game = {game} ORDER BY HighestPoint ASC, HighestTime DESC;""")
+            scores = cursor.execute(f"""SELECT TOP 10 HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC;""", (game,))
+            score = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE UserID = ? and Game = ?;""", (userId,), (game,))
+        usernames = cursor.execute(f"""SELECT TOP 10 UserID FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC, HighestTime DESC;""", (game,))
         for index in range(10):
-            usernames[index] = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = {usernames[index]};""")
+            usernames[index] = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""" (usernames[index],))
         scores.append(score)
-        usernames.append(cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = {userId};"""))
-        rank = cursor.execute(f"""SELECT COUNT(*) FROM GameData WHERE Game = {game} AND (HighestPoint !< {score} OR HighestPoint = NULL) AND (HighestTime !> {score} OR HighestTime = NULL);""")
+        usernames.append(cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (userId,)))
+        rank = cursor.execute(f"""SELECT COUNT(*) FROM GameData WHERE Game = ? AND (HighestPoint !< ? OR HighestPoint = NULL) AND (HighestTime !> ? OR HighestTime = NULL);""", (game,), (score,), (score,))
         result = [scores, usernames, rank]
         return result
     
 sqliteConnection.commit()
-sqliteConnection.close()
