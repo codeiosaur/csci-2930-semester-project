@@ -46,7 +46,7 @@ def initSelectMenu(screen):
 
     # Buttons init
     pongButton = Button(
-        screen, 425, 480, 150, 60, text='Pong', font=text_font,
+        screen, 425, 250, 150, 60, text='Pong', font=text_font,
         fontSize=50, margin=20,
         inactiveColour=(150, 150, 150),
         hoverColour=(100, 100, 100),
@@ -55,14 +55,14 @@ def initSelectMenu(screen):
     )
 
     mineButton = Button(
-        screen, 625, 480, 150, 60, text='Minesweeper', font=text_font,
+        screen, 425, 350, 150, 60, text='Minesweeper', font=text_font,
         textColor = (0, 0, 0), fontSize=50, margin=20,
         inactiveColour=(250, 0, 0),
         hoverColour=(200, 0, 0),
         pressedColour=(220, 0, 0),
         onClick=lambda: startGame("Minesweeper")
     )
-
+    """
     sudokuButton = Button(
         screen, 525, 280, 150, 60, text='Sudoku', font=text_font,
         textColor=(0, 0, 0), fontSize=50, margin=20,
@@ -71,7 +71,7 @@ def initSelectMenu(screen):
         pressedColour=(0, 220, 0),
         onClick=lambda: startGame("Sudoku")
     )
-
+    """
     """mastermindButton = Button(
         screen, 205, 380, 150, 60, text='Mastermind', font=text_font,
         fontSize=50, margin=20,
@@ -81,7 +81,7 @@ def initSelectMenu(screen):
         onClick=lambda: startGame("Mastermind")
     )"""
 
-    buttons = [pongButton, mineButton, sudokuButton]
+    buttons = [pongButton, mineButton]
 
     for button in buttons:
         button.setX(int(button.getX() * screenInfo["scaleX"]))
