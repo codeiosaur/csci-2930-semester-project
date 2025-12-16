@@ -2,7 +2,6 @@ import pygame
 from pygame_widgets.button import Button
 from Menus import utils as utils
 
-
 current_game = None
 
 def drawMenuText(screen):
@@ -37,12 +36,16 @@ def startGame(screen):
     if current_game == "Sudoku":
         startSudoku(screen)
 
+def drawLeaderboard(screen):
+    border = utils.scale_rect(400,150, 200,430)
+    pygame.draw.rect(screen,(0,0,0), border, 5)
 
 def initGameStart(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
     screen.fill((255, 255, 255))
     drawMenuText(screen)
+    drawLeaderboard(screen)
 
     utils.switchMenus("gameStart")
     text_font = pygame.font.SysFont("comicsans", 30)
