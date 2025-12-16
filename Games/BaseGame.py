@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import pygame
-from Menus import utils 
+import sys
+import os
+sys.path.insert(0, os.path.abspath('Menus'))
 from Menus.utils import getScreenDims
 
 class BaseGame(ABC):
