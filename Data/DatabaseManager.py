@@ -5,7 +5,7 @@ cursor = sqliteConnection.cursor()
 sql = """CREATE TABLE IF NOT EXISTS UserData(
   Username TEXT NOT NULL,
   Password TEXT NOT NULL,
-  UserID INTEGER NOT NULL PRIMARY KEY
+  UserID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
 );
   
 CREATE TABLE IF NOT EXISTS GameData(
@@ -19,22 +19,13 @@ CREATE TABLE IF NOT EXISTS GameData(
 );"""
 cursor.executescript(sql)
 
-emptyIDs = []
-lastID = 0
-
 class DatabaseManager:
     def __init__(self):
         pass
 
     def addUser(self, username, password):
         password = hash(password)
-        if len(emptyIDs) == 0:
-            userID = lastID
-            lastID += 1
-        else:
-            userID = emptyIDs[0]
-            emptyIDs.pop(0)
-        cursor.execute(f"""INSTERT INTO UserData (?, ?, ?);""", (username,), (password,), (userID,))
+        cursor.execute(f"""INSTERT INTO UserData (?, ?);""", (username,), (password,))
 
     def updateUsername(self, username, userID):
         cursor.execute(f"""UPDATE UserData SET Username = ? WHERE UserId = ?;""", (username,), (userID,))
@@ -45,7 +36,6 @@ class DatabaseManager:
 
     def deleteUser(self, userID):
         cursor.execute(f"""DELETE FROM UserData WHERE UserId = ?;""", (userID,))
-        emptyIDs.append[userID]
 
     def usernameExists(self, name):
         result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT UserID FROM UserData WHERE UserData.Username = ?);""", (name,))
