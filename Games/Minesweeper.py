@@ -61,10 +61,11 @@ class Minesweeper(Game):
 
 
         def flag(self):
-            if self.flagged:
-                self.flagged = False
-            else:
-                self.flagged = True
+            if not self.game.locked:
+                if self.flagged:
+                    self.flagged = False
+                else:
+                    self.flagged = True
 
 
     def __init__(self, screen):
@@ -176,12 +177,13 @@ class Minesweeper(Game):
             self.true_ticks = ticks - self.start_ticks
         seconds = int((self.true_ticks) / 1000 % 60)
         minutes = int((self.true_ticks) / 60000)
-        drawText(self.screen, f"{minutes:02d}:{seconds:02d}", self.font2, (0,0,0), 400, 100)
+        drawText(self.screen, f"{minutes:02d}:{seconds:02d}", self.font2, (0,0,0), 500, 100)
 
     def conclude(self):
         if self.win == True and utils.userId is not None:
             db = DB.DatabaseManager()
             db.endGame(False, self.true_ticks/1000, utils.userId,"Minesweeper", self.true_ticks/1000)
+        self.running = False
         startGame("Minesweeper")
 
 
@@ -212,11 +214,11 @@ class Minesweeper(Game):
                 drawText(self.screen,f"{cell.adjacent}",self.font,Minesweeper.CELL_COLORS[cell.adjacent], pix_x+10,pix_y+10)
             if cell.is_mine:
                 pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[3], cell_rect)
-                drawText(self.screen,'*',self.font,Minesweeper.CELL_COLORS[7],pix_x+15,pix_y+15)
+                drawText(self.screen,'*',self.font2,Minesweeper.CELL_COLORS[7],pix_x+15,pix_y+20)
         else:
             pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[8], cell_rect)
             if cell.flagged:
-                drawText(self.screen, '#', self.font2, Minesweeper.CELL_COLORS[3], pix_x + 15, pix_y + 15)
+                drawText(self.screen, '#', self.font, Minesweeper.CELL_COLORS[3], pix_x + 14, pix_y + 15)
             if self.won == True:
                 pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[2], cell_rect)
 
