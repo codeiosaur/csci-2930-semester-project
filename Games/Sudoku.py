@@ -105,21 +105,21 @@ class Sudoku(Game):
         cellPosQueue = [(r, c) for r in range(self.SUBGRID_SIZE) for c in range(self.BOARD_SIZE)]
         random.shuffle(cellPosQueue)
 
-        # used for hidden singles function in solver
-        hiddenUnits = SudokuSolver.buildUnits(self.board, self.BOARD_SIZE, self.SUBGRID_SIZE)
+        # used for hidden singles and pointing pairs functions in solver
+        units = SudokuSolver.buildUnits(self.board, self.BOARD_SIZE, self.SUBGRID_SIZE)
+        hiddenUnits = units[0]; pointingBoxes = units[1]
 
         for row in self.board:
             print(row)
         print("-----")
 
-        removedCells = 0; targetCells = 60
-        while len(cellPosQueue) > 1 and removedCells < targetCells:
+        removedCells = 0; attempts = 60
+        while len(cellPosQueue) > 1 and removedCells < attempts:
             currPos1 = cellPosQueue.pop()  # current cell position
             currPos2 = [self.BOARD_SIZE - currPos1[0] - 1, self.BOARD_SIZE - currPos1[1] - 1]
             currCell1 = self.board[currPos1[0]][currPos1[1]]
             currCell2 = self.board[currPos2[0]][currPos2[1]]
 
-            backupBoard = deepcopy(self.board)
             # Attempt removal of cell
             # Function was human written up until this point but is now ChatGPT-debugged.
             currCell1.playerNumber = -1; currCell2.playerNumber = -1
@@ -129,21 +129,38 @@ class Sudoku(Game):
             progress = True
             while progress:
                 progress = False
-                if (SudokuSolver.solveLRC(self.board, self.BOARD_SIZE)):
+                if SudokuSolver.solveLRC(self.board, self.BOARD_SIZE):
                     progress = True
-                if (SudokuSolver.solveHidden(self.board, self.BOARD_SIZE, hiddenUnits)):
+                if SudokuSolver.solveHidden(self.board, self.BOARD_SIZE, hiddenUnits):
+                    progress = True
+                if SudokuSolver.solvePairs(self.board, hiddenUnits):
+                    progress = True
+                if SudokuSolver.solvePointing(pointingBoxes, self.BOARD_SIZE):
                     progress = True
 
-            print("success")
             currCell1.clickable = True  # make it so player can change it
             currCell2.clickable = True
             removedCells += 2
 
-        print("finished")
+        # print("finished")
+        # for row in self.board:
+        #     print(row)
+
+        # Middle grid removal
+        midRemovals = random.randint(6, 18)
+        cellPosQueue = [(r, c) for r in range(self.SUBGRID_SIZE, self.SUBGRID_SIZE * 2)
+                         for c in range(self.BOARD_SIZE)]
+        random.shuffle(cellPosQueue)
+        for i in range(midRemovals):
+            currPos = cellPosQueue.pop()  # current cell position
+            currCell = self.board[currPos[0]][currPos[1]]
+            currCell.playerNumber = -1
+            currCell.clickable = True
+
+        # Update candidates after middle grid removal
         for row in self.board:
-            print(row)
-
-
+            for cell in row:
+                SudokuSolver.createCandidates(cell, self.board, self.BOARD_SIZE)
 
     def setup(self):
         self.generateSudoku()
@@ -178,20 +195,15 @@ class SudokuSolver:
     @staticmethod
     def createCandidates(cell, board, boardSize):
         # Assumes empty cell.
-        # Step 1: Update the cell itself
-        cell.candidates = set(range(1, boardSize + 1))
-        for peer in cell.peers:
-            if peer.playerNumber != -1:
-                cell.candidates.discard(peer.playerNumber)
-
-        # Step 2: Update all peers
-        for peer in cell.peers:
-            if peer.playerNumber == -1:
-                # Remove all filled numbers from peer's candidates
-                peer.candidates = set(range(1, boardSize + 1))
-                for p2 in peer.peers:
-                    if p2.playerNumber != -1:
-                        peer.candidates.discard(p2.playerNumber)
+        for row in board:
+            for cell in row:
+                if cell.playerNumber != -1:
+                    cell.candidates = set()
+                else:
+                    cell.candidates = set(range(1, boardSize + 1))
+                    for peer in cell.peers:
+                        if peer.playerNumber != -1:
+                            cell.candidates.discard(peer.playerNumber)
 
     @staticmethod
     def setPeers(board, subgridSize, boardSize):
@@ -294,27 +306,29 @@ class SudokuSolver:
     # (because it checks if a number can only go one place somewhere).
     # Written by ChatGPT.
     @staticmethod
-    def buildUnits(board, boardsize, subgridsize):
+    def buildUnits(board, boardSize, subgridSize):
         units = []
 
         # Rows
-        for r in range(boardsize):
+        for r in range(boardSize):
             units.append([board[r][c] for c in range(9)])
 
         # Columns
-        for c in range(boardsize):
+        for c in range(boardSize):
             units.append([board[r][c] for r in range(9)])
 
         # Boxes
-        for br in range(0, boardsize, subgridsize):
-            for bc in range(0, boardsize, subgridsize):
+        boxes = []
+        for br in range(0, boardSize, subgridSize):
+            for bc in range(0, boardSize, subgridSize):
                 box = []
-                for r in range(br, br + subgridsize):
-                    for c in range(bc, bc + subgridsize):
+                for r in range(br, br + subgridSize):
+                    for c in range(bc, bc + subgridSize):
                         box.append(board[r][c])
                 units.append(box)
+                boxes.append(box)
 
-        return units
+        return units, boxes
 
     # Solve with hidden singles method.
     # Code chatgpt-written, then adapted for custom boards.
@@ -348,4 +362,57 @@ class SudokuSolver:
                         SudokuSolver.setValue(cell, d)
                         progress = True
         return progress
+
+    # Look for naked pairs (https://www.learn-sudoku.com/naked-pairs.html)
+    # Function written by chatgpt.
+    @staticmethod
+    def solvePairs(board, units):
+        progress = False
+        for unit in units:
+            pairs = {}
+            for cell in unit:
+                if cell.playerNumber == -1 and len(cell.candidates) == 2:
+                    key = frozenset(cell.candidates)
+                    pairs.setdefault(key, []).append(cell)
+
+            for pair, cells in pairs.items():
+                if len(cells) == 2:
+                    for cell in unit:
+                        if cell not in cells and cell.playerNumber == -1:
+                            if pair & cell.candidates:
+                                cell.candidates -= pair
+                                progress = True
+        return progress
+
+    # code written by ChatGPT
+    @staticmethod
+    def solvePointing(boxes, boardsize):
+        progress = False
+        for box in boxes:
+            for digit in range(1, boardsize + 1):
+                cells = [c for c in box if c.playerNumber == -1 and digit in c.candidates]
+                if not cells:
+                    continue
+
+                rows = {c.row for c in cells}
+                cols = {c.col for c in cells}
+
+                if len(rows) == 1:
+                    r = rows.pop()
+                    for c in range(boardsize):
+                        cell = box[0].board[r][c]
+                        if cell not in cells and digit in cell.candidates:
+                            cell.candidates.remove(digit)
+                            progress = True
+
+                if len(cols) == 1:
+                    c = cols.pop()
+                    for r in range(boardsize):
+                        cell = box[0].board[r][c]
+                        if cell not in cells and digit in cell.candidates:
+                            cell.candidates.remove(digit)
+                            progress = True
+        return progress
+
+
 
