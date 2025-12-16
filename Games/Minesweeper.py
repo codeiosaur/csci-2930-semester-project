@@ -179,8 +179,11 @@ class Minesweeper(Game):
         drawText(self.screen, f"{minutes:02d}:{seconds:02d}", self.font2, (0,0,0), 400, 100)
 
     def conclude(self):
+        if self.win == True and utils.userId is not None:
+            db = DB.DatabaseManager()
+            db.endGame(False, self.true_ticks/1000, utils.userId,"Minesweeper", self.true_ticks/1000)
         startGame("Minesweeper")
-        db = DB.DatabaseManager()
+
 
     def continueButton(self):
 
