@@ -40,6 +40,10 @@ class DatabaseManager:
     def usernameExists(self, name):
         result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT UserID FROM UserData WHERE UserData.Username = ?);""", (name,))
         return result.fetchone()
+
+    def getUsername(self, userId):
+        result = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?""", (userId,))
+        return result.fetchone()
     
     def getIdFromName(self, username):
         result = cursor.execute(f"""SELECT UserID FROM UserData WHERE Username = ?;""", (username,))
