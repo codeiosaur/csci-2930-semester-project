@@ -30,8 +30,10 @@ def draw_text(screen, text, font, text_col, x, y):
     screen.blit(img, text_rect)
     return int(x * screenInfo["scaleX"]), int(y * screenInfo["scaleY"])
 
-def draw_rect(screen):
-    pass
+def scale_rect(x,y,width,height):
+    screenInfo = getScreenDims()
+    rect = pygame.Rect(x * screenInfo["scaleX"],y * screenInfo["scaleY"], width * screenInfo["scaleX"], height * screenInfo["scaleY"])
+    return rect
 
 # Remove all objects i.e. widgets (used to switch menus)
 def clear_objects():
