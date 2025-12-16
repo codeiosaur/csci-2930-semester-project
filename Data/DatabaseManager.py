@@ -49,13 +49,15 @@ class DatabaseManager:
 
     def usernameExists(self, name):
         result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT UserID FROM UserData WHERE UserData.Username = ?);""", (name,))
-        return result
+        return result.fetchone()
     
     def getIdFromName(self, username):
-        return cursor.execute(f"""SELECT UserID FROM UserData WHERE Username = ?;""", (username,))
+        result = cursor.execute(f"""SELECT UserID FROM UserData WHERE Username = ?;""", (username,))
+        return result.fetchone()
 
     def checkPassword (self, password, userId): #Returns boolean if password is correct
-        return (cursor.execute(f"""SELECT Password FROM UserData WHERE UserData.UserID = ?;""", (userId)) == hash(password))
+        result = cursor.execute(f"""SELECT Password FROM UserData WHERE UserData.UserID = ?;""", (userId) == hash(password))
+        return result.fetchone()
     
     def endGame(self, point, score, userId, game, time): #Call this function at end of game to update stats
         first = cursor.execute(f"""SELECT UserID FROM GameData WHERE EXISTS UserID = ? AND Game = ?;""", (userId,), (game,))
