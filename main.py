@@ -81,8 +81,10 @@ def main():
     pygame.quit()
 
 if __name__ == '__main__':
+    subprocess.run(["git", "pull", "origin", "main"], capture_output=True)
     main()
-    subprocess.run(["git", "add", "LocalDatabase.db"], check=True)
-    subprocess.run(["git", "commit", "-m", "DB Update"], check=True)
-    subprocess.run(["git", "push"], check=True)
-    
+    if subprocess.run(["git", "diff", "--quiet", "LocalDatabase.db"], capture_output=True).returncode != 0:
+        subprocess.run(["git", "add", "LocalDatabase.db"], check=True)
+        if subprocess.run(["git", "diff", "--cached", "--quiet"], capture_output=True).returncode != 0:
+            subprocess.run(["git", "commit", "-m", "DB Update"], check=True)
+            subprocess.run(["git", "push"], check=True)
