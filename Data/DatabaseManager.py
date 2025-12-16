@@ -50,8 +50,11 @@ class DatabaseManager:
         return result.fetchone()
 
     def checkPassword (self, password, userId): #Returns true if password is correct, else returns false
-        result = cursor.execute(f"""SELECT Password FROM UserData WHERE UserData.UserID = ?;""", (userId) == hash(password))
-        return result.fetchone()
+        saved = cursor.execute(f"""SELECT Password FROM UserData WHERE UserData.UserID = ?;""", (userId)).fetchone()
+        if saved == hash(password):
+            return True
+        else:
+            return False
     
     def endGame(self, point, score, userId, game, time): #Call this function at end of game to update stats
         first = cursor.execute(f"""SELECT UserID FROM GameData WHERE EXISTS UserID = ? AND Game = ?;""", (userId, game,)).fetchone()
