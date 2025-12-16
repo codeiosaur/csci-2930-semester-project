@@ -89,7 +89,7 @@ class DatabaseManager:
                 scores = cursor.execute(f"""SELECT *, HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC;""", (game,)).fetchall()
             score = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE UserID = ? and Game = ?;""", (userId, game,)).fetchone()
         usernames = cursor.execute(f"""SELECT UserID FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC, HighestTime DESC LIMIT 10;""", (game,)).fetchall()
-        for index in range(10):
+        for index in range(len(scores)):
             usernames[index] = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (usernames[index],)).fetchone()
         scores.append(score)
         usernames.append(cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (userId,)).fetchone())
