@@ -25,7 +25,7 @@ class DatabaseManager:
 
     def addUser(self, username, password):
         password = hash(password)
-        cursor.execute(f"""INSERT INTO UserData (Username, Password) VALUES ?, ?);""", (username, password,))
+        cursor.execute(f"""INSERT INTO UserData (Username, Password) VALUES (?, ?));""", (username, password,))
 
     def updateUsername(self, username, userID):
         cursor.execute(f"""UPDATE UserData SET Username = ? WHERE UserId = ?;""", (username, userID,))
