@@ -1,7 +1,7 @@
 import pygame
 import random
-from Games.BaseGame import BaseGame as Game
-from Menus.utils import draw_text as drawText
+from BaseGame import BaseGame as Game
+from Menus.utils import draw_text as drawText, userId
 from Data.DatabaseManager import DatabaseManager
 from time import time
 
@@ -20,6 +20,8 @@ darkGrey = (100, 100, 100)
 black = (0, 0, 0)
 
 resultColors = [black, darkGrey, lightGrey]
+
+radius = 2.5
 
 class Mastermind(Game):
     def __init__(self, screen):
@@ -62,14 +64,14 @@ class Mastermind(Game):
             playSurRow = []
             for column in range(5):
                 answerRow.append(white)
-                anSurRow.append(self.createButton(screen, white, [column * (self.SCREEN_WIDTH / 7) + 5, row * (self.SCREEN_HEIGHT / 14) + 5], 2.5))
+                anSurRow.append(self.createButton(screen, white, [column * (self.SCREEN_WIDTH / 7) + 5, row * (self.SCREEN_HEIGHT / 14) + 5], radius))
                 playRow.append(white)
-                playSurRow.append(self.createButton(screen, white, [(self.SCREEN_WIDTH / 2) + column * (self.SCREEN_WIDTH / 7) + 5, row * (self.SCREEN_HEIGHT / 14) + 5], 2.5))
+                playSurRow.append(self.createButton(screen, white, [(self.SCREEN_WIDTH / 2) + column * (self.SCREEN_WIDTH / 7) + 5, row * (self.SCREEN_HEIGHT / 14) + 5], radius))
             self.answers.append(answerRow)
             self.plays.append(playRow)
         for column in range(len(playColors)):
             self.current.append(playColors[column])
-            self.currentSurfaces.append(self.createButton(screen, playColors[column], [5 + (self.SCREEN_WIDTH / 2) + column * (self.SCREEN_WIDTH/7), self.SCREEN_HEIGHT - 5], 2.5))
+            self.currentSurfaces.append(self.createButton(screen, playColors[column], [5 + (self.SCREEN_WIDTH / 2) + column * (self.SCREEN_WIDTH/7), self.SCREEN_HEIGHT - 5], radius))
         self.submit = pygame.Rect(0, self.SCREEN_HEIGHT - 15, self.SCREEN_WIDTH / 4, 50, 10)
         pygame.draw.rect(0, self.SCREEN_HEIGHT - 15, self.SCREEN_WIDTH / 4, 50, 10)
         drawText(screen, "Submit", ("menlo", 45), black, 0, self.SCREEN_HEIGHT - 15)
@@ -112,11 +114,11 @@ class Mastermind(Game):
         for button in range(5):
             position = self.getCircPos(self.playSurfaces[self.index][button])
             if self.getColor(position) == white:
-                self.drawButton(self.screen, color, position, 2.5)
+                self.drawButton(self.screen, color, position, radius)
                 self.plays[self.index][button] = color
                 for saved in range(len(playColors)):
                     if playColors[saved] == color:
-                        self.drawButton(self.screen, white, self.getCircPos(self.currentSurfaces[saved]), 2.5)
+                        self.drawButton(self.screen, white, self.getCircPos(self.currentSurfaces[saved]), radius)
                         self.current[saved] = white
                         break
                 break
@@ -124,12 +126,12 @@ class Mastermind(Game):
     def remove(self, color, index):
         self.plays[self.index][index] = white
         position = self.getCircPos(self.playSurfaces[self.index][index])
-        self.drawButton(self.screen, white, position, 2.5)
+        self.drawButton(self.screen, white, position, radius)
         for saved in range(len(playColors)):
             if color == playColors[saved]:
                 self.current[saved] = color
                 position = (self.getCircPos(self.currentSurfaces[saved]))
-                self.drawButton(self.screen, color, position, 2.5)
+                self.drawButton(self.screen, color, position, radius)
                 break
 
     def submit(self):
@@ -147,14 +149,14 @@ class Mastermind(Game):
         for res in len(result):
             for ind in range(result[res]):
                 self.answers[self.index][ind] = resultColors[res]
-                self.drawButton(self.screen, resultColors[res], self.getCircPos(self.answerSurfaces[self.index][loopindex]), 2.5)
+                self.drawButton(self.screen, resultColors[res], self.getCircPos(self.answerSurfaces[self.index][loopindex]), radius)
                 loopindex += 1
         self.plays[self.index] = self.current
         for index in range(5):
-            self.drawButton(self.screen, self.plays[self.index][index], self.getCircPos(self.playSurfaces[self.index][index]), 2.5)
+            self.drawButton(self.screen, self.plays[self.index][index], self.getCircPos(self.playSurfaces[self.index][index]), radius)
         self.current = playColors
         for index in range(len(8)):
-            self.drawButton(self.screen, self.current[index], self.getCircPos(self.currentSurfaces[index]), 2.5)
+            self.drawButton(self.screen, self.current[index], self.getCircPos(self.currentSurfaces[index]), radius)
         self.index += 1
 
     def scoring(self):
@@ -166,8 +168,9 @@ class Mastermind(Game):
                 elif color == darkGrey:
                     colorPoints = 2
         score = (12-self.index) * 10 + colorPoints
-        db = DatabaseManager()
-        db.endGame(self.point, score, ,"Mastermind", self.endTime - self.startTime)
+        if userId != None:
+            db = DatabaseManager()
+            db.endGame(self.point, score, userId,"Mastermind", self.endTime - self.startTime)
 
     def on_key(self):
         pass
