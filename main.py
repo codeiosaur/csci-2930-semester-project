@@ -1,6 +1,4 @@
 import subprocess
-import sys
-import os
 
 import pygame
 import pygame_widgets

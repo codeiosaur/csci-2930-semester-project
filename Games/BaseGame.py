@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import pygame
 import sys
 import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from Menus.utils import getScreenDims
 
 class BaseGame(ABC):
