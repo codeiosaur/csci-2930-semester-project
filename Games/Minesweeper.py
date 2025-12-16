@@ -1,9 +1,10 @@
 from Games.BaseGame import BaseGame as Game, pygame
 from Menus.utils import draw_text as drawText, scale_rect as scaleRect, switchMenus, getScreenDims, register_widget
+from Menus import utils
 from Menus.gameSelect import startGame
 from pygame_widgets.button import Button
 import random
-from Data import DatabaseManager
+from Data import DatabaseManager as DB
 import math
 
 class Minesweeper(Game):
@@ -146,6 +147,10 @@ class Minesweeper(Game):
                             cell.reveal()
                         if event.button == 3:
                             cell.flag()
+            if(self.locked == True):
+                button_rect = scaleRect(425, 540, 150, 60)
+                if self.isIn(button_rect,pos):
+                    self.conclude()
         self.checkWin()
 
     def on_key(self, key):
@@ -173,22 +178,16 @@ class Minesweeper(Game):
         minutes = int((self.true_ticks) / 60000)
         drawText(self.screen, f"{minutes:02d}:{seconds:02d}", self.font2, (0,0,0), 400, 100)
 
+    def conclude(self):
+        startGame("Minesweeper")
+        db = DB.DatabaseManager()
+
     def continueButton(self):
-        button = Button(
-            self.screen, 425, 480, 150, 60, text='Continue', font=self.font2,
-            fontSize=50, margin=20,
-            inactiveColour=(150, 150, 150),
-            hoverColour=(100, 100, 100),
-            pressedColour=(180, 180, 180),
-            onClick=lambda: startGame("Minesweeper")
-        )
-        screenInfo = getScreenDims()
-        button.setX(int(button.getX() * screenInfo["scaleX"]))
-        button.setY(int(button.getY() * screenInfo["scaleY"]))
-        button.setWidth(int(button.getWidth() * screenInfo["scaleX"]))
-        button.setHeight(int(button.getHeight() * screenInfo["scaleY"]))
+
         if self.locked == True:
-            register_widget(button)
+            button_rect = scaleRect(425, 540, 150, 60)
+            pygame.draw.rect(self.screen, (0, 150, 0), button_rect)
+            drawText(self.screen,"Continue", self.font2, Minesweeper.CELL_COLORS[7], 500, 570)
 
     def draw(self):
         self.screen.fill((255,255,255))
@@ -214,7 +213,7 @@ class Minesweeper(Game):
         else:
             pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[8], cell_rect)
             if cell.flagged:
-                drawText(self.screen, '#', self.font, Minesweeper.CELL_COLORS[3], pix_x + 15, pix_y + 15)
+                drawText(self.screen, '#', self.font2, Minesweeper.CELL_COLORS[3], pix_x + 15, pix_y + 15)
             if self.won == True:
                 pygame.draw.rect(self.screen, Minesweeper.CELL_COLORS[2], cell_rect)
 
