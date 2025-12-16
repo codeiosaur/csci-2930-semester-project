@@ -40,9 +40,9 @@ def startGame(screen):
         startSudoku(screen)
 
 def drawLeaderboard(screen):
-    text_font = pygame.font.SysFont("comicsans", 15)
-    utils.draw_text(screen, "Leaderboard", text_font, (0,0,0), 450, 130)
-    border = utils.scale_rect(400,150, 200,230)
+    text_font = pygame.font.SysFont("comicsans", 20)
+    utils.draw_text(screen, "Leaderboard", text_font, (0,0,0), 500, 170)
+    border = utils.scale_rect(400,180, 200,230)
     pygame.draw.rect(screen,(0,0,0), border, 5)
     db = DatabaseManager()
     leaderboard = db.leaderboard(current_game, utils.userId, current_game_point)
@@ -50,7 +50,8 @@ def drawLeaderboard(screen):
         for i in range(len(leaderboard[1])):
             utils.draw_text(screen, leaderboard[1][i], text_font, (0,0,0),410, 160 + 40*i)
         utils.draw_text(screen,leaderboard[1][len(leaderboard[1])], text_font, (0,0,0), 410, 360)
-   # for j in range
+        for j in range(len(leaderboard[0])):
+            utils.draw_text(screen, leaderboard[0][i], text_font, (0,0,0),570, 160 + 40*i)
 
 def initGameStart(screen):
     screenInfo = utils.getScreenDims()
