@@ -24,8 +24,6 @@ def startMinesweeper(screen):
 def startMastermind(screen):
     from Games import Mastermind
     Mastermind.Mastermind(screen)
-    utils.setPreviousGame("Mastermind")
-    utils.swtichMenus("gameOver")
 
 def startSudoku(screen):
     from Games import Sudoku
