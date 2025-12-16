@@ -1,10 +1,15 @@
 import pygame
 from pygame_widgets.button import Button
 import Menus.utils as utils
+from Data.DatabaseManager import DatabaseManager
+
 
 def drawMenuText(screen):
+    db = DatabaseManager()
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, "Main Menu", text_font, (0, 0, 0), 500, 100)
+    if utils.userId is not None:
+        utils.draw_text(screen, str(db.getUsername(utils.userId)), text_font,(0,0,0), 50, 50)
 
 def initMainMenu(screen):
     screenInfo = utils.getScreenDims()
