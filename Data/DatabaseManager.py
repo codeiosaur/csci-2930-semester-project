@@ -28,7 +28,7 @@ class DatabaseManager:
 
     def addUser(self, username, password):
         password = hash(password)
-        if emptyIDs.length() == 0:
+        if len(emptyIDs) == 0:
             userID = lastID
             lastID += 1
         else:

@@ -82,5 +82,7 @@ def main():
 
 if __name__ == '__main__':
     main()
-    subprocess.run("git add LocalDatabase.db && git commit -m 'DB Update' && git push", shell = True)
+    subprocess.run(["git", "add", "LocalDatabase.db"], check=True)
+    subprocess.run(["git", "commit", "-m", "DB Update"], check=True)
+    subprocess.run(["git", "push"], check=True)
     
