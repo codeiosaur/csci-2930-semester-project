@@ -78,17 +78,17 @@ class DatabaseManager:
     def leaderboard(self, game, userId, point): #Returns a list containing a list of the highest 10 scores and the users score, a list of the corresponding usernames in order, and an integer for the user's rank
         if point:
             if len(cursor.execute(f"""SELECT *, HighestPoint FROM GameData WHERE Game = ?""").fetchall()) > 9:
-                scores = cursor.execute(f"""SELECT TOP 10 HighestPoint FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC;""", (game,)).fetchall()
+                scores = cursor.execute(f"""SELECT HighestPoint FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC LIMIT 10;""", (game,)).fetchall()
             else:
-                scores = cursor.execute(f"""SELECT *, HighestPoint FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC""", (game,)).fetchall()
+                scores = cursor.execute(f"""SELECT *, HighestPoint FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC;""", (game,)).fetchall()
             score = cursor.execute(f"""SELECT HighestPoint FROM GameData WHERE UserID = ? and Game = ?;""", (userId, game,)).fetchone()
         else:
             if len(cursor.execute(f"""SELECT *, HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC""", (game,)).fetchall()) > 9:
-                scores = cursor.execute(f"""SELECT TOP 10 HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC;""", (game,)).fetchall()
+                scores = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC LIMIT 10;""", (game,)).fetchall()
             else:
-                scores = cursor.execute(f"""SELECT *, HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC""", (game,)).fetchall()
+                scores = cursor.execute(f"""SELECT *, HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC;""", (game,)).fetchall()
             score = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE UserID = ? and Game = ?;""", (userId, game,)).fetchone()
-        usernames = cursor.execute(f"""SELECT TOP 10 UserID FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC, HighestTime DESC;""", (game,)).fetchall()
+        usernames = cursor.execute(f"""SELECT UserID FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC, HighestTime DESC LIMIT 10;""", (game,)).fetchall()
         for index in range(10):
             usernames[index] = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (usernames[index],)).fetchone()
         scores.append(score)
