@@ -91,9 +91,12 @@ class DatabaseManager:
                 scores = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC LIMIT 10;""", (game,)).fetchall()
             else:
                 scores = cursor.execute(f"""SELECT *, HighestTime FROM GameData WHERE Game = ? ORDER BY HighestTime DESC;""", (game,)).fetchall()
-            cursor.execute(f"""SELECT HighestTime FROM GameData WHERE UserID = ? AND Game = ?;""", (userId, game))
-            result = cursor.fetchone()
-            score = result[0] if result else None
+            try:
+                cursor.execute(f"""SELECT HighestTime FROM GameData WHERE UserID = ? AND Game = ?;""", (userId, game)).fetchone()
+            except:
+                score = None
+            else:
+                score = cursor.execute(f"""SELECT HighestTime FROM GameData WHERE UserID = ? AND Game = ?;""", (userId, game)).fetchone()
         usernames = cursor.execute(f"""SELECT UserID FROM GameData WHERE Game = ? ORDER BY HighestPoint ASC, HighestTime DESC LIMIT 10;""", (game,)).fetchall()
         for index in range(len(scores)):
             usernames[index] = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (usernames[index],)).fetchone()
