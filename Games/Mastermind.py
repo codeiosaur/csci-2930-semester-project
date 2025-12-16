@@ -1,3 +1,5 @@
+#error from menus import perplexity is confused
+
 import pygame
 import random
 from BaseGame import BaseGame as Game
