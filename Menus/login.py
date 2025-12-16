@@ -79,7 +79,7 @@ def initLoginMenu(screen):
         inactiveColour=(150, 150, 150),
         hoverColour=(100,100,100),
         pressedColour=(180, 180, 180),
-        onClick=lambda: login(screen, usernameBox.getText(),passwordBox.getText())
+        onClick=lambda: login(usernameBox.getText(),passwordBox.getText())
     )
 
     createAccountButton = Button(
@@ -88,7 +88,7 @@ def initLoginMenu(screen):
         inactiveColour=(150, 150, 150),
         hoverColour=(100, 100, 100),
         pressedColour=(180, 180, 180),
-        onClick=lambda: createAccount(screen, usernameBox.getText(), passwordBox.getText())
+        onClick=lambda: createAccount(usernameBox.getText(), passwordBox.getText())
     )
 
     buttons = [ loginButton, createAccountButton]
