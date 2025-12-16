@@ -13,10 +13,15 @@ def drawMenuText(screen):
 
 
 def login(username, password):
-    pass
+    base = db.DatabaseManager()
+    Id = base.getIdFromName(username)
+    if base.checkPassword(password,Id):
+        utils.userId = Id
 
 def createAccount(username,password):
-    pass
+    base = db.DatabaseManager()
+    if not base.usernameExists(username):
+        base.addUser(username,password)
 
 def initLoginMenu(screen):
     screenInfo = utils.getScreenDims()
