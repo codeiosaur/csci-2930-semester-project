@@ -3,30 +3,55 @@ from pygame_widgets.button import Button
 from pygame_widgets.textbox import TextBox
 import Menus.utils as utils
 import Data.DatabaseManager as db
+from Menus.utils import switchMenus
 
 loggingIn = False
+exceptionText = "Please enter a valid username and password!"
+exception = False
 
 def drawMenuText(screen):
-    text_font = pygame.font.SysFont("comicsans", 30)
+    text_font = pygame.font.SysFont("arial", 30)
     utils.draw_text(screen, "Login or Create account", text_font, (0, 0, 0), 400, 100)
-    print("a")
+    drawExceptionText(screen)
 
-def exception1():
-    pass
 
-def login(username, password):
+def setException():
+    global exception
+    exception = True
+
+def drawExceptionText(screen):
+
+    if exception == True:
+        text_font = pygame.font.SysFont("arial", 15)
+        utils.draw_text(screen, f"{exceptionText}", text_font, (255, 0, 0), 450, 400)
+
+def login(screen, username, password):
     base = db.DatabaseManager()
-    Id = base.getIdFromName(username)
-    if base.checkPassword(password,Id):
-        utils.userId = Id
-    elif username == None or password == None:
-        exception1()
+    if username != '' and password != '' and base.usernameExists(username):
+        Id = base.getIdFromName(username)
+        if base.checkPassword(password,Id):
+            utils.userId = Id
+            login.loggingIn = False
+            switchMenus("main")
+        else:
+            setException()
+    else:
+        setException()
 
 
-def createAccount(username,password):
+def createAccount(screen, username,password):
     base = db.DatabaseManager()
-    if not base.usernameExists(username):
-        base.addUser(username,password)
+    if username != '' and password != '':
+        if not base.usernameExists(username):
+            base.addUser(username,password)
+            Id = base.getIdFromName(username)
+            utils.userId = Id
+            login.loggingIn = False
+            switchMenus("main")
+        else:
+            setException()
+    else:
+        setException()
 
 def initLoginMenu(screen):
     screenInfo = utils.getScreenDims()
@@ -37,7 +62,7 @@ def initLoginMenu(screen):
 
     login.loggingIn = True
     # Other initializations (non-button)
-    text_font = pygame.font.SysFont("comicsans", 30)
+    text_font = pygame.font.SysFont("arial", 30)
     pygame.display.set_caption("Main Window")
 
     usernameBox = TextBox(screen, 375, 200, 250, 80, placeholderText="Username:",
@@ -54,7 +79,8 @@ def initLoginMenu(screen):
         inactiveColour=(150, 150, 150),
         hoverColour=(100,100,100),
         pressedColour=(180, 180, 180),
-        onClick=lambda: login(usernameBox.getText(),passwordBox.getText))
+        onClick=lambda: login(screen, usernameBox.getText(),passwordBox.getText())
+    )
 
     createAccountButton = Button(
         screen, 350, 480, 150, 60, text='Create account', font=text_font,
@@ -62,7 +88,8 @@ def initLoginMenu(screen):
         inactiveColour=(150, 150, 150),
         hoverColour=(100, 100, 100),
         pressedColour=(180, 180, 180),
-        onClick=lambda: createAccount(usernameBox.getText(), passwordBox.getText))
+        onClick=lambda: createAccount(screen, usernameBox.getText(), passwordBox.getText())
+    )
 
     buttons = [ loginButton, createAccountButton]
     textObjects = [usernameBox,passwordBox]
