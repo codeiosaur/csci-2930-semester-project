@@ -102,11 +102,11 @@ class DatabaseManager:
         for index in range(len(scores)):
             usernames[index] = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (usernames[index],)).fetchone()
         scores.append(score)
-        cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (userId,))
+        user_list = usernames if isinstance(usernames, list) else []
         result = cursor.fetchone()
         if result:
-            username = str(result[0]).strip("(),'\"")  # Strips tuple wrappers, quotes
-            usernames.append(username)
+            user_list.append(str(result[0]).strip("(),'\""))
+            usernames = user_list
         rank = cursor.execute(f"""SELECT COUNT(*) FROM GameData WHERE Game = ? AND (HighestPoint >= ? OR HighestPoint = NULL) AND (HighestTime <= ? OR HighestTime = NULL);""", (game, score, score,)).fetchone()
         result = [scores, usernames, rank]
         return result
