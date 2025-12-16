@@ -25,7 +25,7 @@ def drawExceptionText(screen):
         text_font = pygame.font.SysFont("arial", 15)
         utils.draw_text(screen, f"{exceptionText}", text_font, (255, 0, 0), 450, 400)
 
-def login(screen, username, password):
+def login(username, password):
     base = db.DatabaseManager()
     if username != '' and password != '' and base.usernameExists(username):
         Id = base.getIdFromName(username)
@@ -39,7 +39,7 @@ def login(screen, username, password):
         setException()
 
 
-def createAccount(screen, username,password):
+def createAccount(username,password):
     base = db.DatabaseManager()
     if username != '' and password != '':
         if not base.usernameExists(username):
