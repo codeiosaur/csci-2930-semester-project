@@ -102,7 +102,7 @@ class DatabaseManager:
             usernames[index] = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (usernames[index],)).fetchone()
         scores.append(score)
         result = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?;""", (userId,)).fetchone()
-        usernames.append(result[0] if result else None)
+        usernames.append(result[0][0] if result else None)
         rank = cursor.execute(f"""SELECT COUNT(*) FROM GameData WHERE Game = ? AND (HighestPoint >= ? OR HighestPoint = NULL) AND (HighestTime <= ? OR HighestTime = NULL);""", (game, score, score,)).fetchone()
         result = [scores, usernames, rank]
         return result
