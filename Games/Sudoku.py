@@ -152,7 +152,37 @@ class Sudoku(Game):
             for cell in row:
                 SudokuSolver.createCandidates(cell, self.board, self.BOARD_SIZE)
 
+
+    def drawSetup(self):
+        # Various constants inspired by ChatGPT, but implemented in human-written functions
+        # (mainly this one)
+        screenDims = [self.screenInfo["width"], self.screenInfo["height"]]
+
+        # Leave margins
+        usable_w = screenDims[0] * 0.8
+        usable_h = screenDims[1] * 0.8
+
+        CELL_SIZE = int(min(usable_w, usable_h) / self.BOARD_SIZE)
+        GRID_SIZE = CELL_SIZE * self.BOARD_SIZE
+
+        OFFSET_X = (screenDims[0] - GRID_SIZE) // 2
+        OFFSET_Y = (screenDims[1] - GRID_SIZE) // 2
+        # grid
+        for i in range(self.BOARD_SIZE):
+            thickness = max(1, CELL_SIZE // 15)
+            if i % self.SUBGRID_SIZE == 0:
+                thickness = max(3, CELL_SIZE // 5)
+            # vertical lines
+            pygame.draw.line(
+                self.screen,
+                self.BLACK,
+                (OFFSET_X + i * CELL_SIZE, OFFSET_Y),
+                (OFFSET_X + i * CELL_SIZE, OFFSET_Y + GRID_SIZE),
+                thickness
+            )
+
     def setup(self):
+        self.drawSetup()
         self.generateSudoku()
 
     def on_event(self, event):
