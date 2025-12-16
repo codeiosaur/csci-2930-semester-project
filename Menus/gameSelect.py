@@ -68,16 +68,16 @@ def initSelectMenu(screen):
         onClick=lambda: startGame("Sudoku")
     )
 
-    mastermindButton = Button(
+    """mastermindButton = Button(
         screen, 205, 380, 150, 60, text='Mastermind', font=text_font,
         fontSize=50, margin=20,
         inactiveColour=(150, 0, 150),
         hoverColour=(100, 100, 100),
         pressedColour=(180, 180, 180),
         onClick=lambda: startGame("Mastermind")
-    )
+    )"""
 
-    buttons = [pongButton, mineButton, sudokuButton, mastermindButton]
+    buttons = [pongButton, mineButton, sudokuButton]
 
     for button in buttons:
         button.setX(int(button.getX() * screenInfo["scaleX"]))
