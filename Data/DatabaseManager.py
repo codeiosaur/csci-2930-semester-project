@@ -25,7 +25,7 @@ class DatabaseManager:
 
     def addUser(self, username, password):
         password = hash(password)
-        cursor.execute(f"""INSERT INTO UserData (?, ?);""", (username, password,))
+        cursor.execute(f"""INSERT INTO UserData (Username, Password) VALUES ?, ?);""", (username, password,))
 
     def updateUsername(self, username, userID):
         cursor.execute(f"""UPDATE UserData SET Username = ? WHERE UserId = ?;""", (username, userID,))
@@ -69,7 +69,7 @@ class DatabaseManager:
             played = cursor.execute(f"""SELECT TimesPlayed FROM GameData WHERE UserID = ? AND Game = ?;""", (userId, game,)).fetchone() + 1
             cursor.execute(f"""UPDATE GameData SET TimesPlayed = ?, TotalTime = ?, HighestPoint = ?, HighestTime = ? WHERE UserID = ? AND Game = ?;""", (played, time, score, timescore, userId, game,))
         else:
-            cursor.execute(f"""INSERT INTO GameData (?, 1, ?, ?, ?, ?);""", (userId, game, time, score, timescore,))
+            cursor.execute(f"""INSERT INTO GameData (UserID, Game, TimesPlayed, Totaltime, HighestPoint, HighestTime) VALUES (?, 1, ?, ?, ?, ?);""", (userId, game, time, score, timescore,))
 
     def leaderboard(self, game, userId, point): #Returns a list containing a list of the highest 10 scores and the users score, a list of the corresponding usernames in order, and an integer for the user's rank
         if point:
