@@ -47,9 +47,12 @@ class DatabaseManager:
         cursor.execute(f"""DELETE FROM UserData WHERE UserId = {userID};""")
         emptyIDs.append[userID]
 
-    def usernameExists (self, name):
+    def usernameExists(self, name):
         result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT Username FROM UserData WHERE UserData.Username = {name});""")
         return result
+    
+    def getIdFromName(self, username):
+        return cursor.execute(f"""SELECT UserID FROM UserData WHERE Username = {username}""")
 
     def checkPassword (self, password, userId): #Returns boolean if password is correct
         return (cursor.execute(f"""SELECT Password FROM UserData WHERE UserData.UserID = {userId};""") == hash(password))
