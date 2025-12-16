@@ -14,8 +14,8 @@ def drawMenuText(screen):
 def startPong(screen):
     from Games import Pong
     Pong.Pong(screen) # If this stops executing, the game must have ended.
-    utils.setPreviousGame("Pong")
-    utils.switchMenus("gameOver")
+    # utils.setPreviousGame("Pong")
+    # utils.switchMenus("gameOver")
 
 def startMinesweeper(screen):
     from Games import Minesweeper
