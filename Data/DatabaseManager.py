@@ -42,8 +42,8 @@ class DatabaseManager:
         return result.fetchone()
 
     def getUsername(self, userId):
-        cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?""", (userId))
-        return cursor.fetchone()
+        result = cursor.execute(f"""SELECT Username FROM UserData WHERE UserID = ?""", (userId))
+        return result.fetchone()
     
     def getIdFromName(self, username):
         result = cursor.execute(f"""SELECT UserID FROM UserData WHERE Username = ?;""", (username,))
