@@ -1,12 +1,15 @@
 import pygame
 from pygame_widgets.button import Button
 from Menus import utils as utils
+from Data.DatabaseManager import DatabaseManager
 
 current_game = None
+current_game_point = None
 
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, current_game, text_font, (0, 0, 0), 500, 100)
+    drawLeaderboard(screen)
 
 def startPong(screen):
     from Games import Pong
@@ -37,15 +40,21 @@ def startGame(screen):
         startSudoku(screen)
 
 def drawLeaderboard(screen):
-    border = utils.scale_rect(400,150, 200,430)
+    border = utils.scale_rect(400,150, 200,230)
     pygame.draw.rect(screen,(0,0,0), border, 5)
+    db = DatabaseManager()
+    leaderboard = db.leaderboard(current_game, utils.userId, current_game_point)
+    text_font = pygame.font.SysFont("comicsans", 15)
+    for i in range(5):
+        utils.draw_text(screen, leaderboard[1][i], text_font, (0,0,0),410, 160 + 40*i)
+    utils.draw_text(screen,leaderboard[1][10], text_font, (0,0,0), 410, 360)
+   # for j in range
 
 def initGameStart(screen):
     screenInfo = utils.getScreenDims()
     utils.clear_objects()
     screen.fill((255, 255, 255))
     drawMenuText(screen)
-    drawLeaderboard(screen)
 
     utils.switchMenus("gameStart")
     text_font = pygame.font.SysFont("comicsans", 30)

@@ -30,6 +30,10 @@ def startSudoku(screen):
 def startGame(game):
     gameStart.current_game = game
     utils.switchMenus("gameStart")
+    if game == "Minesweeper":
+        gameStart.current_game_point = False
+    else:
+        gameStart.current_game_point = True
 
 def initSelectMenu(screen):
     screenInfo = utils.getScreenDims()
