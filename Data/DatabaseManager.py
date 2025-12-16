@@ -96,4 +96,3 @@ class DatabaseManager:
         return result
     
 sqliteConnection.commit()
-sqliteConnection.close()
