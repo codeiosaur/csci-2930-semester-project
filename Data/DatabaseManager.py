@@ -48,7 +48,7 @@ class DatabaseManager:
         emptyIDs.append[userID]
 
     def usernameExists(self, name):
-        result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT Username FROM UserData WHERE UserData.Username = ?);""", (name,))
+        result = cursor.execute(f"""SELECT Username FROM UserData WHERE EXISTS(SELECT UserID FROM UserData WHERE UserData.Username = ?);""", (name,))
         return result
     
     def getIdFromName(self, username):

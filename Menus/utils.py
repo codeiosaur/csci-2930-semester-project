@@ -7,6 +7,9 @@ previous_game = None
 previous_winner = None # previous game winner
 userId = None
 
+def __init__(self):
+    pass
+
 # Set global variables regarding the screen resolution.
 def getScreenDims():
     if not pygame.get_init():
