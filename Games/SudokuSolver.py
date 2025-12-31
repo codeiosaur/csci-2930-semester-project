@@ -1,6 +1,5 @@
 # Subclass used in Sudoku for storing various sudoku solving functions.
 # Static class
-# All functions/code written and debugged by Alex unless otherwise stated.
 class SudokuSolver:
     @staticmethod
     def findEmptyCells(board, boardSize):

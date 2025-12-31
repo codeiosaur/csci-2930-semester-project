@@ -2,7 +2,7 @@ from Games.BaseGame import BaseGame as Game, pygame
 from Menus.utils import draw_text as drawText, setPreviousWinner as setWinner
 import random
 
-# Used Claude Sonnet for debugging, but 90% of the code is mine (Alex's) own.
+# Used Claude Sonnet for debugging, but 90% of the code is human-written.
 # The 10% that isn't is credited as such below.
 
 class Pong(Game):

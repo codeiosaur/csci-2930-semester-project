@@ -1,10 +1,6 @@
 import pygame
 from pygame_widgets.button import Button
 from Menus import utils, gameStart
-from Menus.gameStart import initGameStart
-
-
-# Main Author: Alex
 
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)

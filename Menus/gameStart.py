@@ -9,7 +9,7 @@ current_game_point = None
 def drawMenuText(screen):
     text_font = pygame.font.SysFont("comicsans", 30)
     utils.draw_text(screen, current_game, text_font, (0, 0, 0), 500, 100)
-    drawLeaderboard(screen)
+    #drawLeaderboard(screen)
 
 def startPong(screen):
     from Games import Pong

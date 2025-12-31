@@ -4,8 +4,6 @@ from Menus.utils import draw_text as drawText, setPreviousWinner as setWinner
 import random
 from copy import deepcopy
 
-# Main Author: Alex
-
 class Sudoku(Game):
     class Cell:
         def __init__(self, row, col):
